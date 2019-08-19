@@ -13,10 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user-info', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('send-sms', 'SmsController@sendSms');
 
 Route::post('/login-sms', 'LoginController@login');    //用户登录
+
+//需要认证的API接口
+Route::group(['middleware' => 'auth:api'], function (){
+    Route::get('user-info', 'UserController@userInfo'); //用户信息
+    Route::get('customer-list', 'UserController@customerList'); //客户信息
+    Route::get('customer-info/{id}', 'UserController@customerInfo'); //客户信息
+});

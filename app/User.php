@@ -19,16 +19,6 @@ class User extends Authenticatable
     protected $fillable = [
         'mobile',
         'name',
-        'email',
-        'level',
-        'industry',
-        'source',
-        'website',
-        'province',
-        'city',
-        'area',
-        'address',
-        'next_visit_time',
         'email_verified_at',
         'password',
     ];
