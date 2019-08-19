@@ -47,6 +47,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception->getMessage() == 'Too Many Attempts.'){
+            $data = [
+                'code' => 429,
+                'message' => '请求频繁',
+            ];
+
+            return response()->json($data, 200);
+        }
+
         if ($exception->getMessage() == "Unauthenticated.") {
             $data = [
                 'code' => 401,
