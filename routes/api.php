@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 */
 
 Route::post('send-sms', 'SmsController@sendSms');
-
 Route::post('/login-sms', 'LoginController@login');    //用户登录
 
 //需要认证的API接口
@@ -22,4 +21,7 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('user-info', 'UserController@userInfo'); //用户信息
     Route::get('customer-list', 'UserController@customerList'); //客户信息
     Route::get('customer-info/{id}', 'UserController@customerInfo'); //客户信息
+    Route::get('follow-list/{id}/{order}', 'UserController@followList'); //跟进记录
+    Route::post('follow', 'UserController@follow'); //盯一下
+    Route::get('customer-end/{id}', 'UserController@customerEnd'); //结束拜访
 });

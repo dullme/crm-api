@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    echo bcrypt('123456');
+    echo substr('18606520987', -4);
     return view('welcome');
 });
 

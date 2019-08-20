@@ -60,7 +60,8 @@ class LoginController extends ResponseController {
             ['mobile' => $data['mobile']],
             [
                 'mobile' => $data['mobile'],
-                'password' => bcrypt(randStr(20))
+                'password' => bcrypt(randStr(20)),
+                'name' => substr($data['mobile'], -4)
             ]
         );
 
