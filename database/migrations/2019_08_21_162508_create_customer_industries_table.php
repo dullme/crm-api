@@ -15,6 +15,7 @@ class CreateCustomerIndustriesTable extends Migration
     {
         Schema::create('customer_industries', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('admin_user_id')->unsigned()->comment('关联管理员');
             $table->string('name');
             $table->boolean('is_show')->comment('是否显示');
             $table->timestamps();

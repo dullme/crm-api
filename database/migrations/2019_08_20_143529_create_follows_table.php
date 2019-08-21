@@ -20,8 +20,6 @@ class CreateFollowsTable extends Migration
             $table->timestamp('visited_at')->comment('重访时间');
             $table->text('remark')->nullable()->comment('备注');
             $table->timestamps();
-
-            $table->foreign('customer_id')->references('id')->on('users');
         });
     }
 

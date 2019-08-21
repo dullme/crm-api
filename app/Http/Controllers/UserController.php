@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\CustomerIndustry;
+use App\CustomerSource;
 use App\Follow;
 use Illuminate\Http\Request;
 
@@ -27,7 +29,7 @@ class UserController extends ResponseController
                 'mobile' => 'required',
                 'level' => 'required|integer|min:1',
                 'source' => 'required|integer|min:1',
-                'industry' => 'nullable|string',
+                'industry' => 'required|integer|min:1',
                 'address' => 'nullable|string',
                 'website' => 'nullable|string',
 //                'date' => 'required|date_format:"Y-m-d"',
@@ -161,7 +163,7 @@ class UserController extends ResponseController
         return $this->responseSuccess(Follow::create([
             'customer_id' => $data['customer_id'],
             'type' =>  $data['type'],
-            'visited_at' => $data['date'] . ' ' . $data['time'],
+            'visited_at' => "{$data['date']} {$data['time']}:00",
             'remark' => request('remark')
         ]));
     }
@@ -185,5 +187,22 @@ class UserController extends ResponseController
         }
 
         return $this->responseSuccess(true);
+    }
+
+    public function customerIndustryAndSource()
+    {
+        $industry = CustomerIndustry::where('admin_user_id', Auth()->user()->admin_user_id)
+            ->where('is_show', 1)->select('name', 'id')->pluck('name', 'id');
+
+        $source = CustomerSource::where('admin_user_id', Auth()->user()->admin_user_id)
+            ->where('is_show', 1)->select('name', 'id')->pluck('name', 'id');
+
+        $industry[0] = '请选择';
+        $source[0] = '请选择';
+
+        return $this->responseSuccess([
+            'source' => $source,
+            'industry' => $industry
+        ]);
     }
 }

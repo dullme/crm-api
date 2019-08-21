@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 8.0.16)
 # Database: crm_api
-# Generation Time: 2019-08-21 09:54:39 +0000
+# Generation Time: 2019-08-21 14:19:04 +0000
 # ************************************************************
 
 
@@ -30,10 +30,10 @@ CREATE TABLE `admin_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `order` int(11) NOT NULL DEFAULT '0',
-  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `uri` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `permission` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uri` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permission` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -68,10 +68,10 @@ DROP TABLE IF EXISTS `admin_operation_log`;
 CREATE TABLE `admin_operation_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `method` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `input` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `input` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -663,7 +663,145 @@ VALUES
 	(578,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 17:52:01','2019-08-21 17:52:01'),
 	(579,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 17:52:01','2019-08-21 17:52:01'),
 	(580,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 17:52:01','2019-08-21 17:52:01'),
-	(581,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 17:52:02','2019-08-21 17:52:02');
+	(581,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 17:52:02','2019-08-21 17:52:02'),
+	(582,1,'admin','GET','127.0.0.1','[]','2019-08-21 19:38:06','2019-08-21 19:38:06'),
+	(583,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:38:12','2019-08-21 19:38:12'),
+	(584,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:38:15','2019-08-21 19:38:15'),
+	(585,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:38:17','2019-08-21 19:38:17'),
+	(586,1,'admin/users','GET','127.0.0.1','[]','2019-08-21 19:38:47','2019-08-21 19:38:47'),
+	(587,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:20','2019-08-21 19:39:20'),
+	(588,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:22','2019-08-21 19:39:22'),
+	(589,1,'admin','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:24','2019-08-21 19:39:24'),
+	(590,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:27','2019-08-21 19:39:27'),
+	(591,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:28','2019-08-21 19:39:28'),
+	(592,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:39:29','2019-08-21 19:39:29'),
+	(593,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:15','2019-08-21 19:41:15'),
+	(594,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:34','2019-08-21 19:41:34'),
+	(595,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:36','2019-08-21 19:41:36'),
+	(596,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:37','2019-08-21 19:41:37'),
+	(597,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:38','2019-08-21 19:41:38'),
+	(598,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:38','2019-08-21 19:41:38'),
+	(599,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:38','2019-08-21 19:41:38'),
+	(600,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:39','2019-08-21 19:41:39'),
+	(601,1,'admin/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:39','2019-08-21 19:41:39'),
+	(602,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:51','2019-08-21 19:41:51'),
+	(603,1,'admin/auth/permissions/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:41:53','2019-08-21 19:41:53'),
+	(604,1,'admin/auth/permissions','POST','127.0.0.1','{\"slug\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"name\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"users\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:42:39','2019-08-21 19:42:39'),
+	(605,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:42:39','2019-08-21 19:42:39'),
+	(606,1,'admin/auth/permissions/6/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:42:57','2019-08-21 19:42:57'),
+	(607,1,'admin/auth/permissions/6','PUT','127.0.0.1','{\"slug\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"name\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/users\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:43:06','2019-08-21 19:43:06'),
+	(608,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:43:06','2019-08-21 19:43:06'),
+	(609,1,'admin/auth/permissions/6/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:14','2019-08-21 19:43:14'),
+	(610,1,'admin/auth/permissions/6','PUT','127.0.0.1','{\"slug\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"name\":\"\\u5458\\u5de5\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/users*\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:43:21','2019-08-21 19:43:21'),
+	(611,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:43:21','2019-08-21 19:43:21'),
+	(612,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:26','2019-08-21 19:43:26'),
+	(613,1,'admin','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:28','2019-08-21 19:43:28'),
+	(614,1,'admin','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:29','2019-08-21 19:43:29'),
+	(615,1,'admin/auth/menu','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:31','2019-08-21 19:43:31'),
+	(616,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:33','2019-08-21 19:43:33'),
+	(617,1,'admin/auth/permissions/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:43:35','2019-08-21 19:43:35'),
+	(618,1,'admin/auth/permissions','POST','127.0.0.1','{\"slug\":\"\\u5927\\u5ba2\\u6237\\u7ba1\\u7406\",\"name\":\"\\u5927\\u5ba2\\u6237\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/my\\/users*\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:43:57','2019-08-21 19:43:57'),
+	(619,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:43:57','2019-08-21 19:43:57'),
+	(620,1,'admin/auth/permissions/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:44:05','2019-08-21 19:44:05'),
+	(621,1,'admin/auth/permissions','POST','127.0.0.1','{\"slug\":\"\\u884c\\u4e1a\\u7ba1\\u7406\",\"name\":\"\\u884c\\u4e1a\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/customer-sources*\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:44:21','2019-08-21 19:44:21'),
+	(622,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:44:21','2019-08-21 19:44:21'),
+	(623,1,'admin/auth/permissions/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:44:23','2019-08-21 19:44:23'),
+	(624,1,'admin/auth/permissions','POST','127.0.0.1','{\"slug\":\"\\u6765\\u6e90\\u7ba1\\u7406\",\"name\":\"\\u6765\\u6e90\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/customer-industries*\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:44:38','2019-08-21 19:44:38'),
+	(625,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:44:38','2019-08-21 19:44:38'),
+	(626,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:00','2019-08-21 19:45:00'),
+	(627,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:04','2019-08-21 19:45:04'),
+	(628,1,'admin/auth/roles/1/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:08','2019-08-21 19:45:08'),
+	(629,1,'admin/auth/roles/1','PUT','127.0.0.1','{\"slug\":\"\\u8d85\\u7ea7\\u7ba1\\u7406\\u5458\",\"name\":\"\\u8d85\\u7ea7\\u7ba1\\u7406\\u5458\",\"permissions\":[\"1\",null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/roles\"}','2019-08-21 19:45:20','2019-08-21 19:45:20'),
+	(630,1,'admin/auth/roles','GET','127.0.0.1','[]','2019-08-21 19:45:20','2019-08-21 19:45:20'),
+	(631,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:24','2019-08-21 19:45:24'),
+	(632,1,'admin/auth/permissions/1/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:31','2019-08-21 19:45:31'),
+	(633,1,'admin/auth/permissions/1','PUT','127.0.0.1','{\"slug\":\"*\",\"name\":\"\\u8d85\\u7ea7\\u7ba1\\u7406\\u5458\",\"http_method\":[null],\"http_path\":\"*\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:45:37','2019-08-21 19:45:37'),
+	(634,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:45:37','2019-08-21 19:45:37'),
+	(635,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:43','2019-08-21 19:45:43'),
+	(636,1,'admin/auth/roles/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:52','2019-08-21 19:45:52'),
+	(637,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:45:59','2019-08-21 19:45:59'),
+	(638,1,'admin/auth/permissions/2/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:46:03','2019-08-21 19:46:03'),
+	(639,1,'admin/auth/permissions/2','PUT','127.0.0.1','{\"slug\":\"\\u4eea\\u8868\\u76d8\",\"name\":\"\\u4eea\\u8868\\u76d8\",\"http_method\":[\"GET\",null],\"http_path\":\"\\/\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:46:13','2019-08-21 19:46:13'),
+	(640,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:46:13','2019-08-21 19:46:13'),
+	(641,1,'admin/auth/permissions/3/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:46:15','2019-08-21 19:46:15'),
+	(642,1,'admin/auth/permissions/3','PUT','127.0.0.1','{\"slug\":\"\\u767b\\u5f55\",\"name\":\"\\u767b\\u5f55\",\"http_method\":[null],\"http_path\":\"\\/auth\\/login\\r\\n\\/auth\\/logout\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:46:26','2019-08-21 19:46:26'),
+	(643,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:46:26','2019-08-21 19:46:26'),
+	(644,1,'admin/auth/permissions/4/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:46:30','2019-08-21 19:46:30'),
+	(645,1,'admin/auth/permissions/4','PUT','127.0.0.1','{\"slug\":\"\\u8bbe\\u7f6e\",\"name\":\"\\u8bbe\\u7f6e\",\"http_method\":[\"GET\",\"PUT\",null],\"http_path\":\"\\/auth\\/setting\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:46:39','2019-08-21 19:46:39'),
+	(646,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:46:39','2019-08-21 19:46:39'),
+	(647,1,'admin/auth/permissions/5/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:47:06','2019-08-21 19:47:06'),
+	(648,1,'admin/auth/permissions/5','PUT','127.0.0.1','{\"slug\":\"\\u7cfb\\u7edf\\u7ba1\\u7406\",\"name\":\"\\u7cfb\\u7edf\\u7ba1\\u7406\",\"http_method\":[null],\"http_path\":\"\\/auth\\/roles\\r\\n\\/auth\\/permissions\\r\\n\\/auth\\/menu\\r\\n\\/auth\\/logs\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/permissions\"}','2019-08-21 19:47:12','2019-08-21 19:47:12'),
+	(649,1,'admin/auth/permissions','GET','127.0.0.1','[]','2019-08-21 19:47:13','2019-08-21 19:47:13'),
+	(650,1,'admin/auth/permissions','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:47:16','2019-08-21 19:47:16'),
+	(651,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:47:20','2019-08-21 19:47:20'),
+	(652,1,'admin/auth/roles/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:47:21','2019-08-21 19:47:21'),
+	(653,1,'admin/auth/roles','POST','127.0.0.1','{\"slug\":\"\\u5927\\u5ba2\\u6237\",\"name\":\"\\u5927\\u5ba2\\u6237\",\"permissions\":[\"2\",\"3\",\"4\",\"6\",\"7\",\"8\",\"9\",null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/roles\"}','2019-08-21 19:48:16','2019-08-21 19:48:16'),
+	(654,1,'admin/auth/roles','GET','127.0.0.1','[]','2019-08-21 19:48:16','2019-08-21 19:48:16'),
+	(655,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:48:22','2019-08-21 19:48:22'),
+	(656,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:48:30','2019-08-21 19:48:30'),
+	(657,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:48:34','2019-08-21 19:48:34'),
+	(658,1,'admin/auth/users/2/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:48:38','2019-08-21 19:48:38'),
+	(659,1,'admin/auth/users/2','PUT','127.0.0.1','{\"username\":\"big\",\"name\":\"\\u5927\\u5ba2\\u6237\",\"password\":\"$2y$10$51XxImU0mP8WHuNUEHxnXOCdRrvik3TsN9shPUygLwTJO24uQhFfW\",\"password_confirmation\":\"$2y$10$51XxImU0mP8WHuNUEHxnXOCdRrvik3TsN9shPUygLwTJO24uQhFfW\",\"roles\":[\"2\",null],\"permissions\":[null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/users\"}','2019-08-21 19:48:55','2019-08-21 19:48:55'),
+	(660,1,'admin/auth/users','GET','127.0.0.1','[]','2019-08-21 19:48:55','2019-08-21 19:48:55'),
+	(661,1,'admin/auth/users/3/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:49:06','2019-08-21 19:49:06'),
+	(662,1,'admin/auth/users/3','PUT','127.0.0.1','{\"username\":\"jinjialei\",\"name\":\"\\u91d1\\u4f73\\u5792222\",\"password\":\"123456\",\"password_confirmation\":\"123456\",\"roles\":[null],\"permissions\":[null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/users\"}','2019-08-21 19:49:12','2019-08-21 19:49:12'),
+	(663,1,'admin/auth/users','GET','127.0.0.1','[]','2019-08-21 19:49:12','2019-08-21 19:49:12'),
+	(664,1,'admin/auth/users/3/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:49:17','2019-08-21 19:49:17'),
+	(665,1,'admin/auth/users/3','PUT','127.0.0.1','{\"username\":\"jinjialei\",\"name\":\"\\u91d1\\u4f73\\u5792222\",\"password\":\"$2y$10$5XU.Qxg.aotQrUZfSZP1u.uj9N1XUmlBGXfDd76KhnDcXaECv0RLG\",\"password_confirmation\":\"$2y$10$5XU.Qxg.aotQrUZfSZP1u.uj9N1XUmlBGXfDd76KhnDcXaECv0RLG\",\"roles\":[\"2\",null],\"permissions\":[null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/users\"}','2019-08-21 19:49:24','2019-08-21 19:49:24'),
+	(666,1,'admin/auth/users','GET','127.0.0.1','[]','2019-08-21 19:49:24','2019-08-21 19:49:24'),
+	(667,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:49:45','2019-08-21 19:49:45'),
+	(668,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:49:52','2019-08-21 19:49:52'),
+	(669,1,'admin/auth/users/4/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:49:56','2019-08-21 19:49:56'),
+	(670,1,'admin/auth/users/4','PUT','127.0.0.1','{\"username\":\"1\",\"name\":\"1\",\"password\":\"$2y$10$OhpHIUdq7CCNqGtDzJmXiuxSL8eZm3YT\\/Pf3OqztgMjQbQ64neN3e\",\"password_confirmation\":\"$2y$10$OhpHIUdq7CCNqGtDzJmXiuxSL8eZm3YT\\/Pf3OqztgMjQbQ64neN3e\",\"roles\":[\"2\",null],\"permissions\":[null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_method\":\"PUT\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/auth\\/users\"}','2019-08-21 19:50:00','2019-08-21 19:50:00'),
+	(671,1,'admin/auth/users','GET','127.0.0.1','[]','2019-08-21 19:50:00','2019-08-21 19:50:00'),
+	(672,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:07','2019-08-21 19:50:07'),
+	(673,1,'admin/my/users/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:15','2019-08-21 19:50:15'),
+	(674,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:17','2019-08-21 19:50:17'),
+	(675,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:21','2019-08-21 19:50:21'),
+	(676,1,'admin/_handle_action_','POST','127.0.0.1','{\"_key\":\"2\",\"_model\":\"Encore_Admin_Auth_Database_Administrator\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_action\":\"Encore_Admin_Grid_Actions_Delete\",\"_input\":\"true\"}','2019-08-21 19:50:31','2019-08-21 19:50:31'),
+	(677,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:31','2019-08-21 19:50:31'),
+	(678,1,'admin/_handle_action_','POST','127.0.0.1','{\"_key\":\"4\",\"_model\":\"Encore_Admin_Auth_Database_Administrator\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_action\":\"Encore_Admin_Grid_Actions_Delete\",\"_input\":\"true\"}','2019-08-21 19:50:35','2019-08-21 19:50:35'),
+	(679,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:36','2019-08-21 19:50:36'),
+	(680,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:38','2019-08-21 19:50:38'),
+	(681,1,'admin/my/users/3/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:50:41','2019-08-21 19:50:41'),
+	(682,1,'admin/my/users/3/edit','GET','127.0.0.1','[]','2019-08-21 19:51:16','2019-08-21 19:51:16'),
+	(683,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:51:29','2019-08-21 19:51:29'),
+	(684,1,'admin/my/users/3/edit','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:51:40','2019-08-21 19:51:40'),
+	(685,1,'admin/my/users/3/edit','GET','127.0.0.1','[]','2019-08-21 19:52:11','2019-08-21 19:52:11'),
+	(686,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:52:50','2019-08-21 19:52:50'),
+	(687,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:52:56','2019-08-21 19:52:56'),
+	(688,1,'admin/my/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:54:21','2019-08-21 19:54:21'),
+	(689,1,'admin/my/users/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:54:23','2019-08-21 19:54:23'),
+	(690,1,'admin/my/users/create','GET','127.0.0.1','[]','2019-08-21 19:55:49','2019-08-21 19:55:49'),
+	(691,1,'admin/my/users/create','GET','127.0.0.1','[]','2019-08-21 19:56:04','2019-08-21 19:56:04'),
+	(692,1,'admin/my/users/create','GET','127.0.0.1','[]','2019-08-21 19:56:23','2019-08-21 19:56:23'),
+	(693,1,'admin/my/users','POST','127.0.0.1','{\"username\":\"123\",\"name\":\"123\",\"company\":\"123\",\"can_create\":\"10\",\"contact\":\"123\",\"contact_mobile\":\"123\",\"company_address\":\"123\",\"password\":\"123\",\"password_confirmation\":\"123\",\"roles\":[\"2\",null],\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\"}','2019-08-21 19:56:49','2019-08-21 19:56:49'),
+	(694,1,'admin/my/users','GET','127.0.0.1','[]','2019-08-21 19:56:50','2019-08-21 19:56:50'),
+	(695,1,'admin/auth/roles','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:56:54','2019-08-21 19:56:54'),
+	(696,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:56:56','2019-08-21 19:56:56'),
+	(697,1,'admin/_handle_action_','POST','127.0.0.1','{\"_key\":\"5\",\"_model\":\"Encore_Admin_Auth_Database_Administrator\",\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_action\":\"Encore_Admin_Grid_Actions_Delete\",\"_input\":\"true\"}','2019-08-21 19:57:00','2019-08-21 19:57:00'),
+	(698,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:57:00','2019-08-21 19:57:00'),
+	(699,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:58:10','2019-08-21 19:58:10'),
+	(700,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 19:58:12','2019-08-21 19:58:12'),
+	(701,1,'admin/customer-sources','GET','127.0.0.1','[]','2019-08-21 20:01:13','2019-08-21 20:01:13'),
+	(702,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:14','2019-08-21 20:01:14'),
+	(703,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:16','2019-08-21 20:01:16'),
+	(704,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:16','2019-08-21 20:01:16'),
+	(705,1,'admin/customer-industries/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:18','2019-08-21 20:01:18'),
+	(706,1,'admin/customer-industries','POST','127.0.0.1','{\"name\":\"\\u884c\\u4e1a1\",\"is_show\":\"on\",\"admin_user_id\":null,\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/customer-industries\"}','2019-08-21 20:01:25','2019-08-21 20:01:25'),
+	(707,1,'admin/customer-industries','GET','127.0.0.1','[]','2019-08-21 20:01:25','2019-08-21 20:01:25'),
+	(708,1,'admin/customer-industries/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:27','2019-08-21 20:01:27'),
+	(709,1,'admin/customer-industries','POST','127.0.0.1','{\"name\":\"\\u884c\\u4e1a2\",\"is_show\":\"on\",\"admin_user_id\":null,\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/customer-industries\"}','2019-08-21 20:01:30','2019-08-21 20:01:30'),
+	(710,1,'admin/customer-industries','GET','127.0.0.1','[]','2019-08-21 20:01:30','2019-08-21 20:01:30'),
+	(711,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:56','2019-08-21 20:01:56'),
+	(712,1,'admin/customer-sources/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:01:57','2019-08-21 20:01:57'),
+	(713,1,'admin/customer-sources','POST','127.0.0.1','{\"name\":\"\\u5fae\\u4fe1\",\"is_show\":\"on\",\"admin_user_id\":null,\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/customer-sources\"}','2019-08-21 20:02:00','2019-08-21 20:02:00'),
+	(714,1,'admin/customer-sources','GET','127.0.0.1','[]','2019-08-21 20:02:00','2019-08-21 20:02:00'),
+	(715,1,'admin/customer-sources/create','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 20:02:01','2019-08-21 20:02:01'),
+	(716,1,'admin/customer-sources','POST','127.0.0.1','{\"name\":\"\\u90ae\\u4ef6\",\"is_show\":\"on\",\"admin_user_id\":null,\"_token\":\"yS1EOq3qtsvfh0XlLBQmXV4Zap9VPmtayXjRBqQO\",\"_previous_\":\"http:\\/\\/crm-api.test\\/admin\\/customer-sources\"}','2019-08-21 20:02:07','2019-08-21 20:02:07'),
+	(717,1,'admin/customer-sources','GET','127.0.0.1','[]','2019-08-21 20:02:07','2019-08-21 20:02:07'),
+	(718,1,'admin/customer-industries','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 21:15:13','2019-08-21 21:15:13'),
+	(719,1,'admin/customer-sources','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-08-21 21:15:14','2019-08-21 21:15:14');
 
 /*!40000 ALTER TABLE `admin_operation_log` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -676,10 +814,10 @@ DROP TABLE IF EXISTS `admin_permissions`;
 
 CREATE TABLE `admin_permissions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `http_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `http_path` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `http_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `http_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -692,11 +830,15 @@ LOCK TABLES `admin_permissions` WRITE;
 
 INSERT INTO `admin_permissions` (`id`, `name`, `slug`, `http_method`, `http_path`, `created_at`, `updated_at`)
 VALUES
-	(1,'All permission','*','','*',NULL,NULL),
-	(2,'Dashboard','dashboard','GET','/',NULL,NULL),
-	(3,'Login','auth.login','','/auth/login\r\n/auth/logout',NULL,NULL),
-	(4,'User setting','auth.setting','GET,PUT','/auth/setting',NULL,NULL),
-	(5,'Auth management','auth.management','','/auth/roles\r\n/auth/permissions\r\n/auth/menu\r\n/auth/logs',NULL,NULL);
+	(1,'超级管理员','*','','*',NULL,'2019-08-21 19:45:37'),
+	(2,'仪表盘','仪表盘','GET','/',NULL,'2019-08-21 19:46:13'),
+	(3,'登录','登录','','/auth/login\r\n/auth/logout',NULL,'2019-08-21 19:46:26'),
+	(4,'设置','设置','GET,PUT','/auth/setting',NULL,'2019-08-21 19:46:39'),
+	(5,'系统管理','系统管理','','/auth/roles\r\n/auth/permissions\r\n/auth/menu\r\n/auth/logs',NULL,'2019-08-21 19:47:12'),
+	(6,'员工管理','员工管理','','/users*','2019-08-21 19:42:39','2019-08-21 19:43:21'),
+	(7,'大客户管理','大客户管理','','/my/users*','2019-08-21 19:43:57','2019-08-21 19:43:57'),
+	(8,'行业管理','行业管理','','/customer-sources*','2019-08-21 19:44:21','2019-08-21 19:44:21'),
+	(9,'来源管理','来源管理','','/customer-industries*','2019-08-21 19:44:38','2019-08-21 19:44:38');
 
 /*!40000 ALTER TABLE `admin_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -744,7 +886,14 @@ LOCK TABLES `admin_role_permissions` WRITE;
 
 INSERT INTO `admin_role_permissions` (`role_id`, `permission_id`, `created_at`, `updated_at`)
 VALUES
-	(1,1,NULL,NULL);
+	(1,1,NULL,NULL),
+	(2,2,NULL,NULL),
+	(2,3,NULL,NULL),
+	(2,4,NULL,NULL),
+	(2,6,NULL,NULL),
+	(2,7,NULL,NULL),
+	(2,8,NULL,NULL),
+	(2,9,NULL,NULL);
 
 /*!40000 ALTER TABLE `admin_role_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -768,7 +917,8 @@ LOCK TABLES `admin_role_users` WRITE;
 
 INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`)
 VALUES
-	(1,1,NULL,NULL);
+	(1,1,NULL,NULL),
+	(2,3,NULL,NULL);
 
 /*!40000 ALTER TABLE `admin_role_users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -781,8 +931,8 @@ DROP TABLE IF EXISTS `admin_roles`;
 
 CREATE TABLE `admin_roles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -795,7 +945,8 @@ LOCK TABLES `admin_roles` WRITE;
 
 INSERT INTO `admin_roles` (`id`, `name`, `slug`, `created_at`, `updated_at`)
 VALUES
-	(1,'Administrator','administrator','2019-08-21 14:54:41','2019-08-21 14:54:41');
+	(1,'超级管理员','超级管理员','2019-08-21 14:54:41','2019-08-21 19:45:20'),
+	(2,'大客户','大客户','2019-08-21 19:48:16','2019-08-21 19:48:16');
 
 /*!40000 ALTER TABLE `admin_roles` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -823,11 +974,11 @@ DROP TABLE IF EXISTS `admin_users`;
 
 CREATE TABLE `admin_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `company` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司名称',
@@ -845,9 +996,7 @@ LOCK TABLES `admin_users` WRITE;
 INSERT INTO `admin_users` (`id`, `username`, `password`, `name`, `avatar`, `remember_token`, `created_at`, `updated_at`, `company`, `can_create`, `contact`, `contact_mobile`, `company_address`)
 VALUES
 	(1,'admin','$2y$10$/dyQLm2HsW0EQxdERDpqtO.MyxHc4j.hLLkBx1UgO43t3.ysXDU/u','管理员',NULL,'MR0r1RS2mQFKIu4Y2aS9e7IQRu4D6d8lwLMdOYjVUxidMd17gk1fVKzNKBXr','2019-08-21 14:54:41','2019-08-21 15:04:43','',3,NULL,NULL,NULL),
-	(2,'big','$2y$10$51XxImU0mP8WHuNUEHxnXOCdRrvik3TsN9shPUygLwTJO24uQhFfW','大客户','images/ea9ca98da788d48e1b05f6581b34a8c4.png',NULL,'2019-08-21 15:05:21','2019-08-21 16:21:32','公司名称',3,'联系人','12312312312','公司地址'),
-	(3,'jinjialei','$2y$10$6V1zykJ2i1s4FucCN8Sne.8Xt2Kyze9PnGinSjvONMFKWl7rAiVBq','金佳垒222',NULL,'mKXiwnFkI1gTrfsntZD97JpXnIYyOqmv2LObJzElWlHniwXlibvNkNLtP8Q7','2019-08-21 16:10:13','2019-08-21 16:22:49','公司名称',10,'联系人','18606520987','公司地址'),
-	(4,'1','$2y$10$OhpHIUdq7CCNqGtDzJmXiuxSL8eZm3YT/Pf3OqztgMjQbQ64neN3e','1',NULL,NULL,'2019-08-21 16:52:36','2019-08-21 16:52:36','1',10,'1','1','1');
+	(3,'jinjialei','$2y$10$5XU.Qxg.aotQrUZfSZP1u.uj9N1XUmlBGXfDd76KhnDcXaECv0RLG','金佳垒222',NULL,'mKXiwnFkI1gTrfsntZD97JpXnIYyOqmv2LObJzElWlHniwXlibvNkNLtP8Q7','2019-08-21 16:10:13','2019-08-21 19:49:12','公司名称',10,'联系人','18606520987','公司地址');
 
 /*!40000 ALTER TABLE `admin_users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -860,7 +1009,8 @@ DROP TABLE IF EXISTS `customer_industries`;
 
 CREATE TABLE `customer_industries` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_user_id` int(10) unsigned NOT NULL COMMENT '关联管理员',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_show` tinyint(1) NOT NULL COMMENT '是否显示',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -870,9 +1020,10 @@ CREATE TABLE `customer_industries` (
 LOCK TABLES `customer_industries` WRITE;
 /*!40000 ALTER TABLE `customer_industries` DISABLE KEYS */;
 
-INSERT INTO `customer_industries` (`id`, `name`, `is_show`, `created_at`, `updated_at`)
+INSERT INTO `customer_industries` (`id`, `admin_user_id`, `name`, `is_show`, `created_at`, `updated_at`)
 VALUES
-	(1,'123123',1,'2019-08-21 16:43:30','2019-08-21 16:43:30');
+	(1,1,'行业1',1,'2019-08-21 20:01:25','2019-08-21 20:01:25'),
+	(2,2,'行业2',1,'2019-08-21 20:01:30','2019-08-21 20:01:30');
 
 /*!40000 ALTER TABLE `customer_industries` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -885,7 +1036,8 @@ DROP TABLE IF EXISTS `customer_sources`;
 
 CREATE TABLE `customer_sources` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_user_id` int(10) unsigned NOT NULL COMMENT '关联管理员',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_show` tinyint(1) NOT NULL COMMENT '是否显示',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -895,9 +1047,10 @@ CREATE TABLE `customer_sources` (
 LOCK TABLES `customer_sources` WRITE;
 /*!40000 ALTER TABLE `customer_sources` DISABLE KEYS */;
 
-INSERT INTO `customer_sources` (`id`, `name`, `is_show`, `created_at`, `updated_at`)
+INSERT INTO `customer_sources` (`id`, `admin_user_id`, `name`, `is_show`, `created_at`, `updated_at`)
 VALUES
-	(1,'中介',1,'2019-08-21 16:40:56','2019-08-21 16:41:10');
+	(1,1,'微信',1,'2019-08-21 20:02:00','2019-08-21 20:02:00'),
+	(2,1,'邮件',1,'2019-08-21 20:02:07','2019-08-21 20:02:07');
 
 /*!40000 ALTER TABLE `customer_sources` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -911,19 +1064,19 @@ DROP TABLE IF EXISTS `customers`;
 CREATE TABLE `customers` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL COMMENT '外键：users的主键',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '客户名称',
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '头像',
-  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '电话',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '客户名称',
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '头像',
+  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '电话',
   `status` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '状态',
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
-  `level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '等级',
-  `industry` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '行业',
-  `source` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源',
-  `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网站地址',
-  `province` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省',
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '市',
-  `area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '区',
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '详细地址',
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
+  `level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '等级',
+  `industry` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '行业',
+  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源',
+  `website` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网站地址',
+  `province` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省',
+  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '市',
+  `area` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '区',
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '详细地址',
   `next_visit_time` timestamp NULL DEFAULT NULL COMMENT '下次访问时间',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -932,6 +1085,18 @@ CREATE TABLE `customers` (
   CONSTRAINT `customers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+
+INSERT INTO `customers` (`id`, `user_id`, `name`, `avatar`, `mobile`, `status`, `email`, `level`, `industry`, `source`, `website`, `province`, `city`, `area`, `address`, `next_visit_time`, `created_at`, `updated_at`)
+VALUES
+	(1,6,'测试卡',NULL,'123123',0,NULL,'3','1','1','1123',NULL,NULL,NULL,NULL,NULL,'2019-08-21 21:45:50','2019-08-21 21:50:26'),
+	(2,6,'测试2',NULL,'123123',0,NULL,'3','1','1',NULL,NULL,NULL,NULL,NULL,NULL,'2019-08-21 21:51:13','2019-08-21 21:52:13'),
+	(3,6,'测试222',NULL,'123123',1,NULL,'2','1','1',NULL,NULL,NULL,NULL,NULL,NULL,'2019-08-21 21:51:33','2019-08-21 22:18:45'),
+	(4,6,'test',NULL,'123',0,NULL,'3','1','2','123',NULL,NULL,NULL,'123',NULL,'2019-08-21 22:17:30','2019-08-21 22:17:30');
+
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table follows
@@ -944,14 +1109,22 @@ CREATE TABLE `follows` (
   `customer_id` int(10) unsigned NOT NULL COMMENT '外键：customers的主键',
   `type` int(10) unsigned NOT NULL COMMENT '类型',
   `visited_at` timestamp NOT NULL COMMENT '重访时间',
-  `remark` text COLLATE utf8mb4_unicode_ci COMMENT '备注',
+  `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '备注',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `follows_customer_id_foreign` (`customer_id`),
-  CONSTRAINT `follows_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `follows` WRITE;
+/*!40000 ALTER TABLE `follows` DISABLE KEYS */;
+
+INSERT INTO `follows` (`id`, `customer_id`, `type`, `visited_at`, `remark`, `created_at`, `updated_at`)
+VALUES
+	(1,3,2,'2019-08-21 12:00:00','123123','2019-08-21 22:16:09','2019-08-21 22:16:09'),
+	(2,3,1,'2024-08-21 12:07:00','9999','2019-08-21 22:17:08','2019-08-21 22:17:08');
+
+/*!40000 ALTER TABLE `follows` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table migrations
@@ -961,7 +1134,7 @@ DROP TABLE IF EXISTS `migrations`;
 
 CREATE TABLE `migrations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -982,8 +1155,8 @@ VALUES
 	(9,'2019_08_19_134011_create_customers_table',1),
 	(10,'2019_08_20_143529_create_follows_table',1),
 	(11,'2016_01_04_173148_create_admin_tables',2),
-	(12,'2019_08_21_162419_create_customer_sources_table',3),
-	(13,'2019_08_21_162508_create_customer_industries_table',3);
+	(14,'2019_08_21_162419_create_customer_sources_table',3),
+	(15,'2019_08_21_162508_create_customer_industries_table',3);
 
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -995,11 +1168,11 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_access_tokens`;
 
 CREATE TABLE `oauth_access_tokens` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) DEFAULT NULL,
   `client_id` int(10) unsigned NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1013,9 +1186,11 @@ LOCK TABLES `oauth_access_tokens` WRITE;
 
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`)
 VALUES
+	('38bc86475d5769e87090e5aada6ee41ff1014994bac0a446d52a750f1e2be4ed6471674bf5c4d369',6,2,NULL,'[]',0,'2019-08-21 22:15:53','2019-08-21 22:15:53','2019-09-05 22:15:53'),
 	('43e66cb4dda5c238c3c005058c54bd0b5827e2e43da218878efbfe4c5b39d093f9dfc1a589757db7',6,2,NULL,'[]',0,'2019-08-21 17:18:40','2019-08-21 17:18:40','2019-09-05 17:18:40'),
 	('93943f7d5900bf568a7375a2aa2fce1c4f352966f10f98fc51d18afadc64a305f78bda29aca68489',2,2,NULL,'[]',0,'2019-08-20 17:18:09','2019-08-20 17:18:09','2019-09-04 17:18:09'),
-	('c4a8126c038d34363c0717b69c992d4c9d023f7e7e14be3e5ea39db8df198688f90fdea492736db6',1,2,NULL,'[]',0,'2019-08-20 14:42:55','2019-08-20 14:42:55','2019-09-04 14:42:55');
+	('c4a8126c038d34363c0717b69c992d4c9d023f7e7e14be3e5ea39db8df198688f90fdea492736db6',1,2,NULL,'[]',0,'2019-08-20 14:42:55','2019-08-20 14:42:55','2019-09-04 14:42:55'),
+	('d9b6d6913753a16497e96bcced372f7951635292a7bef99873fbfad01da261765ad93ae4aea2a359',6,2,NULL,'[]',0,'2019-08-21 21:18:32','2019-08-21 21:18:32','2019-09-05 21:18:32');
 
 /*!40000 ALTER TABLE `oauth_access_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1027,10 +1202,10 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_auth_codes`;
 
 CREATE TABLE `oauth_auth_codes` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `client_id` int(10) unsigned NOT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -1046,9 +1221,9 @@ DROP TABLE IF EXISTS `oauth_clients`;
 CREATE TABLE `oauth_clients` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `redirect` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `personal_access_client` tinyint(1) NOT NULL,
   `password_client` tinyint(1) NOT NULL,
   `revoked` tinyint(1) NOT NULL,
@@ -1101,8 +1276,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_refresh_tokens`;
 
 CREATE TABLE `oauth_refresh_tokens` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `access_token_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1115,7 +1290,9 @@ LOCK TABLES `oauth_refresh_tokens` WRITE;
 INSERT INTO `oauth_refresh_tokens` (`id`, `access_token_id`, `revoked`, `expires_at`)
 VALUES
 	('008eecb77322086ea5fbd403c96cbc7a2505b8b36022bcade3e659eb929be5c8041745cb0338bd61','43e66cb4dda5c238c3c005058c54bd0b5827e2e43da218878efbfe4c5b39d093f9dfc1a589757db7',0,'2019-09-20 17:18:40'),
+	('752e8f12c3096f7e2d0dbe28d9e30b373817a1bc0d96098d5611640a6ef1482cfa00bd5db0712a19','d9b6d6913753a16497e96bcced372f7951635292a7bef99873fbfad01da261765ad93ae4aea2a359',0,'2019-09-20 21:18:32'),
 	('8fb4370b5bfb05f4724b90e383fc3a4d5df1f194a624530db60ef605c5d6017f87191345d1e6568b','93943f7d5900bf568a7375a2aa2fce1c4f352966f10f98fc51d18afadc64a305f78bda29aca68489',0,'2019-09-19 17:18:09'),
+	('afc5728ba0eb23af4580224773f55ebfe6e6ef460a8eedff259550cdc90e431b75ddac60c62b2330','38bc86475d5769e87090e5aada6ee41ff1014994bac0a446d52a750f1e2be4ed6471674bf5c4d369',0,'2019-09-20 22:15:53'),
 	('b089d3b2f37b47652e174b1b69c9414a3720612a99a10fcb28423b2916b4800fd261ef4796bd0c07','c4a8126c038d34363c0717b69c992d4c9d023f7e7e14be3e5ea39db8df198688f90fdea492736db6',0,'2019-09-19 14:42:55');
 
 /*!40000 ALTER TABLE `oauth_refresh_tokens` ENABLE KEYS */;
@@ -1128,8 +1305,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `password_resets`;
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   KEY `password_resets_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1144,11 +1321,11 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `admin_user_id` int(10) unsigned NOT NULL COMMENT '关联管理员',
-  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1176,9 +1353,9 @@ DROP TABLE IF EXISTS `verification_codes`;
 CREATE TABLE `verification_codes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL COMMENT '类型',
-  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号',
-  `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '验证码',
-  `message` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短信内容',
+  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号',
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '验证码',
+  `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '短信内容',
   `is_used` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已使用',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1192,7 +1369,9 @@ INSERT INTO `verification_codes` (`id`, `type`, `mobile`, `code`, `message`, `is
 VALUES
 	(1,1,'18606520987','2179','您的验证码为2179',1,'2019-08-20 14:42:49','2019-08-20 14:42:56'),
 	(2,1,'17757860519','9299','您的验证码为9299',1,'2019-08-20 17:17:58','2019-08-20 17:18:09'),
-	(3,1,'18606520987','8734','您的验证码为8734',1,'2019-08-21 17:17:59','2019-08-21 17:18:40');
+	(3,1,'18606520987','8734','您的验证码为8734',1,'2019-08-21 17:17:59','2019-08-21 17:18:40'),
+	(4,1,'18606520987','7349','您的验证码为7349',1,'2019-08-21 21:18:24','2019-08-21 21:18:32'),
+	(5,1,'18606520987','1780','您的验证码为1780',1,'2019-08-21 22:15:49','2019-08-21 22:15:53');
 
 /*!40000 ALTER TABLE `verification_codes` ENABLE KEYS */;
 UNLOCK TABLES;

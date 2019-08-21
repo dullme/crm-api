@@ -25,4 +25,6 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::post('follow', 'UserController@follow'); //盯一下
     Route::get('customer-end/{id}', 'UserController@customerEnd'); //结束拜访
     Route::post('customer/{id?}', 'UserController@addCustomer'); //客户信息保存
+
+    Route::get('customer-industry-and-source', 'UserController@customerIndustryAndSource'); //客户信息保存
 });

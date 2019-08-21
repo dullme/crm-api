@@ -63,6 +63,10 @@ class CustomerSourceController extends AdminController
 
         $form->text('name', __('名称'));
         $form->switch('is_show', __('是否显示'))->default(true);
+        $form->hidden('admin_user_id');
+        $form->saving(function (Form $form) {
+            $form->admin_user_id = Auth('admin')->user()->id;
+        });
 
         return $form;
     }

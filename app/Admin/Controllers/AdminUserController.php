@@ -112,7 +112,7 @@ class AdminUserController extends Controller
     {
         $userModel = config('admin.database.users_model');
 //        $permissionModel = config('admin.database.permissions_model');
-//        $roleModel = config('admin.database.roles_model');
+        $roleModel = config('admin.database.roles_model');
 
         $form = new Form(new $userModel());
         $form->tools(function (Form\Tools $tools) {
@@ -133,8 +133,7 @@ class AdminUserController extends Controller
         });
 
         $form->ignore(['password_confirmation']);
-
-//        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
+        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::where('name', '!=', '超级管理员')->where('id', '!=', 1)->get()->pluck('name', 'id'))->rules('required');
 //        $form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
         $form->saving(function (Form $form) {

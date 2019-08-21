@@ -41,7 +41,7 @@ class SmsController extends ResponseController
             VerificationCode::create([
                 'mobile' => $data['mobile'],
                 'type' => '1', //短信登录验证码
-                'code' => $code = randStr(4),
+                'code' => $code = '1234',//randStr(4),
                 'message' => "您的验证码为{$code}",
             ]);
 
