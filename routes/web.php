@@ -11,8 +11,9 @@
 |
 */
 
+use App\Customer;
+
 Route::get('/', function () {
-    echo substr('18606520987', -4);
     return view('welcome');
 });
 

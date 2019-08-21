@@ -19,6 +19,47 @@ class UserController extends ResponseController
         return $this->responseSuccess($request->user());
     }
 
+    public function addCustomer(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'name' => 'required',
+                'mobile' => 'required',
+                'level' => 'required|integer|min:1',
+                'source' => 'required|integer|min:1',
+                'industry' => 'nullable|string',
+                'address' => 'nullable|string',
+                'website' => 'nullable|string',
+//                'date' => 'required|date_format:"Y-m-d"',
+//                'time' => 'required|date_format:"H:i"',
+            ],
+            [
+                'name.required' => '请输入客户名称',
+                'mobile.required' => '请输入电话',
+//                'date.required' => '请输入重访日期',
+//                'date.date' => '日期格式错误',
+//                'time.required' => '请输入重访时间',
+//                'time.date' => '时间格式错误',
+            ]
+        );
+
+        $data['user_id'] = Auth()->user()->id;
+//        $data['next_visit_time'] = "{$data['date']} {$data['time']}:00";
+        $customer_id = $request->input('id');
+        if($request->input('id')){
+            $customer = Customer::where('user_id', Auth()->user()->id)->find($customer_id);
+            if(!$customer){
+                return $this->setStatusCode(422)->responseError('客户资料不存在');
+            }
+
+            $customer->update($data);
+        }else{
+            Customer::create($data);
+        }
+
+        return $this->responseSuccess(true);
+    }
+
     /**
      * 客户管理
      * @return \Illuminate\Http\JsonResponse
@@ -51,7 +92,11 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('信息不存在');
         }
 
-        return $this->responseSuccess($customer);
+        $data = array_filter($customer->toArray(), function ($v){
+            return is_null($v) ? false : true;
+        });
+
+        return $this->responseSuccess($data);
     }
 
     /**

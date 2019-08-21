@@ -24,4 +24,5 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('follow-list/{id}/{order}', 'UserController@followList'); //跟进记录
     Route::post('follow', 'UserController@follow'); //盯一下
     Route::get('customer-end/{id}', 'UserController@customerEnd'); //结束拜访
+    Route::post('customer/{id?}', 'UserController@addCustomer'); //客户信息保存
 });

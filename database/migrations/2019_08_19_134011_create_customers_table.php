@@ -16,7 +16,7 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned()->comment('外键：users的主键');
-            $table->string('name')->unique()->comment('客户名称');
+            $table->string('name')->comment('客户名称');
             $table->string('avatar')->nullable()->comment('头像');
             $table->string('mobile')->nullable()->comment('电话');
             $table->integer('status')->unsigned()->default(0)->comment('状态');
