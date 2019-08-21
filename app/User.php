@@ -45,4 +45,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function adminUser()
+    {
+        $userModel = config('admin.database.users_model');
+        return $this->belongsTo($userModel);
+    }
 }

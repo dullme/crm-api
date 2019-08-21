@@ -41,6 +41,12 @@ class LoginController extends ResponseController {
             ]
         );
 
+        $user = User::where('mobile', $data['mobile'])->first();
+
+        if(!$user){
+            return $this->setStatusCode(422)->responseError('未注册');
+        }
+
         //查询用户是否有生效中的验证码
         $verificationCode = VerificationCode::where([
             'type' => 1, //短信登录验证码
@@ -56,14 +62,14 @@ class LoginController extends ResponseController {
             return $this->setStatusCode(422)->responseError('验证码错误！');
         }
 
-        $user = User::firstOrCreate(
-            ['mobile' => $data['mobile']],
-            [
-                'mobile' => $data['mobile'],
-                'password' => bcrypt(randStr(20)),
-                'name' => substr($data['mobile'], -4)
-            ]
-        );
+//        $user = User::firstOrCreate(
+//            ['mobile' => $data['mobile']],
+//            [
+//                'mobile' => $data['mobile'],
+//                'password' => bcrypt(randStr(20)),
+//                'name' => substr($data['mobile'], -4)
+//            ]
+//        );
 
         $response = $this->getBearerTokenByUser($user, 2);
         $token = json_decode((string) $response->getBody(), true);
