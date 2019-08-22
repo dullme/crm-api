@@ -17,6 +17,9 @@ class CreateFollowsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('customer_id')->unsigned()->comment('外键：customers的主键');
             $table->integer('type')->unsigned()->comment('类型');
+            $table->string('uuid')->nullable()->comment('UUID');
+            $table->string('call_duration')->nullable()->comment('通话时间');
+            $table->string('record_url')->nullable()->comment('录音地址');
             $table->timestamp('visited_at')->comment('重访时间');
             $table->text('remark')->nullable()->comment('备注');
             $table->timestamps();

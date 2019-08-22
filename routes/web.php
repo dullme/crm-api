@@ -13,6 +13,7 @@
 
 use App\Customer;
 
+
 Route::get('/', function () {
     return view('welcome');
 });

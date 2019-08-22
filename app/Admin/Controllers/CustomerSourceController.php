@@ -25,7 +25,7 @@ class CustomerSourceController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CustomerSource);
-
+        $grid->model()->where('admin_user_id', Auth('admin')->user()->id);
         $grid->column('id', __('ID'));
         $grid->column('name', __('名称'));
         $grid->column('is_show', __('是否显示'))->switch();

@@ -11,6 +11,9 @@ class Follow extends Model
         'type',
         'visited_at',
         'remark',
+        'uuid',
+        'record_url',
+        'call_duration',
     ];
 
     public function customer()
