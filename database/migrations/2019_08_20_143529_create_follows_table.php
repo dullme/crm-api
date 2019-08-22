@@ -19,7 +19,7 @@ class CreateFollowsTable extends Migration
             $table->integer('type')->unsigned()->comment('类型');
             $table->string('uuid')->nullable()->comment('UUID');
             $table->string('call_duration')->nullable()->comment('通话时间');
-            $table->string('record_url')->nullable()->comment('录音地址');
+            $table->text('record_url')->nullable()->comment('录音地址');
             $table->timestamp('visited_at')->comment('重访时间');
             $table->text('remark')->nullable()->comment('备注');
             $table->timestamps();
