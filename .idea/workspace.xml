@@ -21,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/UserController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="588">
-              <caret line="297" column="51" selection-start-line="297" selection-start-column="51" selection-end-line="297" selection-end-column="51" />
+            <state relative-caret-position="454">
+              <caret line="300" column="67" lean-forward="true" selection-start-line="300" selection-start-column="67" selection-end-line="300" selection-end-column="67" />
               <folding>
                 <element signature="e#40#48#0#PHP" expanded="true" />
               </folding>
@@ -305,12 +305,12 @@
       <workItem from="1566261219419" duration="6276000" />
       <workItem from="1566348745222" duration="13873000" />
       <workItem from="1566387390741" duration="5737000" />
-      <workItem from="1566473379374" duration="9244000" />
+      <workItem from="1566473379374" duration="9773000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62095000" />
+    <option name="totallyTimeSpent" value="62624000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
@@ -674,15 +674,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/api.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="710">
-          <caret line="30" column="14" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
+        <state relative-caret-position="414">
+          <caret line="22" column="26" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/UserController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="588">
-          <caret line="297" column="51" selection-start-line="297" selection-start-column="51" selection-end-line="297" selection-end-column="51" />
+        <state relative-caret-position="454">
+          <caret line="300" column="67" lean-forward="true" selection-start-line="300" selection-start-column="67" selection-end-line="300" selection-end-column="67" />
           <folding>
             <element signature="e#40#48#0#PHP" expanded="true" />
           </folding>

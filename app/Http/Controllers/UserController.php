@@ -298,7 +298,7 @@ class UserController extends ResponseController
                 'callee'       => $customer->mobile,
                 'call_minutes' => '500',
                 'extends'      => '123123',
-                'cdr_url'      => 'http://crm-api.dullme.com',
+                'cdr_url'      => 'http://crm-api.dullme.com/api/mobile-called',
             ])
         ]);
 
