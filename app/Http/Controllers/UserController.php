@@ -295,7 +295,7 @@ class UserController extends ResponseController
                 'callid'       => $uuid,
                 'app_id'       => '8029',
                 'caller'       => Auth()->user()->mobile,
-                'callee'       => '18606520987',
+                'callee'       => $customer->mobile,
                 'call_minutes' => '500',
                 'extends'      => '123123',
                 'cdr_url'      => 'http://crm-api.dullme.com',
