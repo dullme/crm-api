@@ -327,8 +327,12 @@ class UserController extends ResponseController
         if(isset($data['Record_url']) || isset($data['Call_duration'])){
             $follow = Follow::where('uuid', $data['Call_id'])->first();
             if($follow){
+                $record_url = $data['Record_url'] ? $data['Record_url'] : '';
+                if($record_url){
+                    $record_url = str_replace( 'https://', 'http://' , $record_url);
+                }
                 $follow->call_duration = $data['Call_duration'] ? $data['Call_duration'] : '';
-                $follow->record_url = $data['Record_url'] ? $data['Record_url'] : '';
+                $follow->record_url = $record_url;
                 $follow->save();
             }
             return 200;
