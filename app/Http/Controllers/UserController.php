@@ -127,6 +127,12 @@ class UserController extends ResponseController
             ->orderBy('id', $order)
             ->get();
 
+        $follows= $follows->map(function ($item){
+            $item['visited_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $item['visited_at'])->diffForHumans();
+
+            return $item;
+        });
+
         return $this->responseSuccess([
             'customer' => $customer,
             'follows'  => $follows,
@@ -217,12 +223,16 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('拜访已结束');
         }
 
-        return $this->responseSuccess(Follow::create([
+        $follow = Follow::create([
             'customer_id' => $data['customer_id'],
             'type'        => $data['type'],
             'visited_at'  => "{$data['date']} {$data['time']}:00",
             'remark'      => request('remark')
-        ]));
+        ]);
+
+        $follow['visited_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $follow['visited_at'])->diffForHumans();
+
+        return $this->responseSuccess($follow);
     }
 
     /**
