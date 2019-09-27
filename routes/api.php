@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('send-sms', 'SmsController@sendSms');
-Route::post('/login-sms', 'LoginController@login');    //用户登录
-Route::post('/mobile-called', 'UserController@mobileCalled');    //通话回调
+//Route::post('send-sms', 'SmsController@sendSms');
+//Route::post('/mobile-called', 'UserController@mobileCalled');    //通话回调
+
+Route::post('/login', 'LoginController@login');    //用户登录
+
 
 //需要认证的API接口
 Route::group(['middleware' => 'auth:api'], function (){

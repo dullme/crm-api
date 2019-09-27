@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'mobile',
+        'username',
         'name',
         'email_verified_at',
         'password',
@@ -25,7 +25,7 @@ class User extends Authenticatable
 
     public function findForPassport($username) {
 
-        return User::where('mobile', $username)->first();
+        return User::where('username', $username)->first();
     }
 
     /**
