@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Complaint;
+use App\Deposit;
+use App\User;
+use App\Withdraw;
 use Log;
 use App\Customer;
 use App\CustomerIndustry;
@@ -16,6 +20,17 @@ use Webpatser\Uuid\Uuid;
 class UserController extends ResponseController
 {
 
+    public function uploadImage(Request $request)
+    {
+        $file = $request->file('file');
+        $fileUploaded = upload($file);
+        if (!$fileUploaded['status']){
+            return $this->responseError($fileUploaded['message']);
+        }
+
+        return $this->responseSuccess(url($fileUploaded['path']), '上传成功');
+    }
+
     /**
      * 用户信息
      * @param Request $request
@@ -23,329 +38,215 @@ class UserController extends ResponseController
      */
     public function userInfo(Request $request)
     {
-        return $this->responseSuccess($request->user());
-    }
-
-    public function addCustomer(Request $request)
-    {
-        $data = $request->validate(
-            [
-                'name'     => 'required',
-                'mobile'   => 'required',
-                'level'    => 'required|integer|min:1',
-                'source'   => 'required|integer|min:1',
-                'industry' => 'required|integer|min:1',
-                'address'  => 'nullable|string',
-                'website'  => 'nullable|string',
-//                'date' => 'required|date_format:"Y-m-d"',
-//                'time' => 'required|date_format:"H:i"',
+        return $this->responseSuccess(array_merge([
+            'bankname_list' => [
+                '中国建设银行',
+                '中国农业银行',
+                '中国银行',
+                '中国工商银行',
+                '中国邮政储蓄银行'
             ],
-            [
-                'name.required'   => '请输入客户名称',
-                'mobile.required' => '请输入电话',
-//                'date.required' => '请输入重访日期',
-//                'date.date' => '日期格式错误',
-//                'time.required' => '请输入重访时间',
-//                'time.date' => '时间格式错误',
-            ]
-        );
-
-        $data['user_id'] = Auth()->user()->id;
-//        $data['next_visit_time'] = "{$data['date']} {$data['time']}:00";
-        $customer_id = $request->input('id');
-        if ($request->input('id')) {
-            $customer = Customer::where('user_id', Auth()->user()->id)->find($customer_id);
-            if (!$customer) {
-                return $this->setStatusCode(422)->responseError('客户资料不存在');
-            }
-
-            $customer->update($data);
-        } else {
-            Customer::create($data);
-        }
-
-        return $this->responseSuccess(true);
+            'admin_name' => config('name'),
+            'admin_bankname' => config('bankname'),
+            'admin_bankcard' => config('bankcard'),
+            'admin_handling_fee' => config('handling_fee'),
+        ], $request->user()->toArray()));
     }
 
     /**
-     * 客户管理
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function customerList()
-    {
-        $customer = Customer::with('user:id,name')
-            ->where('user_id', Auth()->user()->id)
-            ->when(request('search'), function ($q) {
-                return $q->where('name', 'like', '%' . request('search') . '%')
-                    ->orWhere('mobile', 'like', '%' . request('search') . '%');
-            })
-            ->select('id', 'user_id', 'avatar', 'name', 'mobile', 'status', 'created_at')
-            ->orderBy('id', 'DESC')
-            ->get();
-
-        return $this->responseSuccess($customer);
-    }
-
-    /**
-     * 客户信息
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function customerInfo($id)
-    {
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($id);
-
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        $data = array_filter($customer->toArray(), function ($v) {
-            return is_null($v) ? false : true;
-        });
-
-        return $this->responseSuccess($data);
-    }
-
-    /**
-     * 跟进记录
-     * @param $id
-     * @param $order
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function followList($id, $order)
-    {
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($id);
-
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        $order = $order ? 'DESC' : 'ASC';
-
-        $follows = Follow::where('customer_id', $id)
-            ->orderBy('visited_at', $order)
-            ->orderBy('id', $order)
-            ->get();
-
-        $follows= $follows->map(function ($item){
-            $item['visited_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $item['visited_at'])->diffForHumans();
-
-            return $item;
-        });
-
-        return $this->responseSuccess([
-            'customer' => $customer,
-            'follows'  => $follows,
-        ]);
-    }
-
-    public function getFollow($id)
-    {
-        $follow = Follow::find($id);
-        if (!$follow) {
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($follow->customer_id);
-
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('无权查看');
-        }
-
-        return $this->responseSuccess([
-            'id'     => $follow->id,
-            'date'   => substr($follow->visited_at, 0, 10),
-            'time'   => substr($follow->visited_at, -8, 5),
-            'type'   => $follow->type,
-            'remark' => $follow->remark ? $follow->remark : '',
-        ]);
-    }
-
-    public function followEdit(Request $request)
-    {
-        $data = $request->validate(
-            [
-                'id'   => 'required|integer',
-                'date' => 'required',
-                'time' => 'required',
-                'type' => 'required',
-            ]
-        );
-
-        $follow = Follow::find($data['id']);
-        if (!$follow) {
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($follow->customer_id);
-
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('无权查看');
-        }
-
-        $follow->visited_at = "{$data['date']} {$data['time']}:00";
-        $follow->type = $data['type'];
-        $follow->remark = request('remark');
-        $follow->save();
-
-        return $this->responseSuccess(true);
-    }
-
-    /**
-     * 盯一下
+     * 更新用户姓名
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function follow(Request $request)
+    public function updateName(Request $request)
+    {
+        $data = $request->validate(
+            ['name'     => 'required'],
+            ['name.required'   => '姓名不能为空']
+        );
+
+        $user = User::find(Auth()->user()->id);
+        $user->name = $data['name'];
+        $user->save();
+
+        return $this->responseSuccess(true, '姓名修改成功');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $data = $request->validate(
+            ['password'     => 'required|min:6'],
+            ['password.required'   => '密码不能为空','password.min'   => '密码过短']
+        );
+
+        $user = User::find(Auth()->user()->id);
+        $user->password = bcrypt($data['password']);
+        $user->save();
+
+        return $this->responseSuccess(true, '密码修改成功');
+    }
+
+    public function updateBankname(Request $request)
+    {
+        $data = $request->validate(
+            ['bankname'     => 'required'],
+            ['bankname.required'   => '开户行不能为空']
+        );
+
+        $user = User::find(Auth()->user()->id);
+        $user->bank_name = $data['bankname'];
+        $user->save();
+
+        return $this->responseSuccess(true, '开户行更新成功');
+    }
+
+    public function updateBankcard(Request $request)
+    {
+        $data = $request->validate(
+            ['bankcard'     => 'required'],
+            ['bankcard.required'   => '银行卡不能为空']
+        );
+
+        $user = User::find(Auth()->user()->id);
+        $user->bank_card = $data['bankcard'];
+        $user->save();
+
+        return $this->responseSuccess(true, '银行卡更新成功');
+    }
+
+    public function saveDeposit(Request $request)
     {
         $data = $request->validate(
             [
-                'customer_id' => 'required',
-                'type'        => 'required',
-                'date'        => 'required',
-                'time'        => 'required',
+                'amount'     => 'required|integer|min:1',
+                'images'     => 'required',
             ],
             [
-                'customer_id.required' => '出错了',
-                'type.required'        => '请选择类型',
-                'date.required'        => '请选择重访日期',
-                'time.required'        => '请选择重访时间',
+                'amount.required'   => '金额不能为空',
+                'amount.integer'   => '金额必须为整数',
+                'amount.min'   => '金额最小为1',
+                'images.required'   => '请上传图片',
             ]
         );
 
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($data['customer_id']);
+        $deposit = Deposit::where([
+            'user_id' => Auth()->user()->id,
+            'status' => 0 //待审核
+        ])->count();
 
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('出错了');
+        if($deposit){
+            return $this->setStatusCode(422)->responseError('存在待审核的保证金');
         }
 
-        if ($customer->status == 1) {
-            return $this->setStatusCode(422)->responseError('拜访已结束');
-        }
-
-        $follow = Follow::create([
-            'customer_id' => $data['customer_id'],
-            'type'        => $data['type'],
-            'visited_at'  => "{$data['date']} {$data['time']}:00",
-            'remark'      => request('remark')
+        Deposit::create([
+            'user_id' => Auth()->user()->id,
+            'amount' => $data['amount'],
+            'name' => config('name'),
+            'bankname' => config('bankname'),
+            'bankcard' => config('bankcard'),
+            'images' => implode(';', $data['images']),
         ]);
 
-        $follow['visited_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $follow['visited_at'])->diffForHumans();
-
-        return $this->responseSuccess($follow);
+        return $this->responseSuccess($data, '提交成功');
     }
 
-    /**
-     * 结束拜访
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function customerEnd($id)
+    public function withdrawList()
     {
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($id);
+        $withdraw_list = Withdraw::where('user_id', Auth()->user()->id)->orderBy('created_at', 'DESC')->get();
 
-        if (!$customer) {
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        if ($customer->status != 1) {
-            $customer->status = 1;
-            $customer->save();
-        }
-
-        return $this->responseSuccess(true);
+        return $this->responseSuccess($withdraw_list);
     }
 
-    public function customerIndustryAndSource()
+    public function withdraw(Request $request)
     {
-        $industry = CustomerIndustry::where('admin_user_id', Auth()->user()->admin_user_id)
-            ->where('is_show', 1)->select('name', 'id')->pluck('name', 'id');
-
-        $source = CustomerSource::where('admin_user_id', Auth()->user()->admin_user_id)
-            ->where('is_show', 1)->select('name', 'id')->pluck('name', 'id');
-
-        $industry[0] = '请选择';
-        $source[0] = '请选择';
-
-        return $this->responseSuccess([
-            'source'   => $source,
-            'industry' => $industry
-        ]);
-    }
-
-    public function callMobile($id)
-    {
-        $customer = Customer::where('user_id', Auth()->user()->id)->find($id);
-
-        if(!$customer){
-            return $this->setStatusCode(422)->responseError('信息不存在');
-        }
-
-        $client = new Client();
-        $response = $client->post("http://new.02110000.com:8088/api/login", [
-            'headers' => [
-                'Content-Type' => 'application/json',
+        $data = $request->validate(
+            [
+                'withdraw_amount'     => 'required|integer|min:1',
             ],
-            'body' => json_encode([
-                'username' => '8029',
-                'password' => 'ZZ0Os6RNuCay2dJi9QlvsFM6pn62Iee9'
-            ])
-        ]);
+            [
+                'withdraw_amount.required'   => '金额不能为空',
+                'withdraw_amount.integer'   => '金额必须为整数',
+                'withdraw_amount.min'   => '金额最小为1',
+            ]
+        );
 
-        $res = json_decode((string) $response->getBody(), true);
+        $user = User::find(Auth()->user()->id);
+        $user_amount = $user->amount;
 
-        $uuid = Uuid::generate()->string;
+        $handing_fee = round(config('handling_fee') / 100 * $data['withdraw_amount'], 2);
 
-        $response2 = $client->post("http://new.02110000.com:8088/api/CallRequest", [
-            'headers' => [
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'JH ' . $res['token'],
-            ],
-            'body'     => json_encode([
-                'callid'       => $uuid,
-                'app_id'       => '8029',
-                'caller'       => Auth()->user()->mobile,
-                'callee'       => $customer->mobile,
-                'call_minutes' => '500',
-                'extends'      => '123123',
-                'cdr_url'      => 'http://crm-api.dullme.com/api/mobile-called',
-            ])
-        ]);
+        $withdraw_big_number = bigNumber($data['withdraw_amount']);
+        $withdraw_amount = $withdraw_big_number->add($handing_fee);
 
-        $res2 = json_decode((string) $response2->getBody(), true);
-
-        if($res2['result'] != 0){
-            return $this->setStatusCode(422)->responseError($res2['msg']);
+        if($withdraw_amount > $user_amount){
+            return $this->setStatusCode(422)->responseError('金额不足');
         }
 
-        Follow::create([
-            'uuid' => $uuid,
-            'customer_id' => $id,
-            'type'        => 10, //表示电话
-            'visited_at'  => Carbon::now(),
-            'remark'      => '系统拨打电话',
+        $user_big_number = bigNumber($user_amount);
+        $amount = $user_big_number->subtract($withdraw_amount)->getValue();
+        $user->amount =$amount;
+        $user->save();
+
+        Withdraw::create([
+            'user_id' => $user->id,
+            'order_no' => time().randStr(6),
+            'amount' => $user_amount, //未扣除前余额
+            'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
+            'handing_fee' => $handing_fee, //手续费
+            'name' => Auth()->user()->name,
+            'bankname' => Auth()->user()->bank_name,
+            'bankcard' => Auth()->user()->bank_card,
         ]);
 
-        return $this->responseSuccess($res2['msg']);
+        return $this->responseSuccess($amount, '提交成功');
     }
 
-    public function mobileCalled(Request $request)
+    public function withdrawConform($id)
     {
-        $data = $request->all();
-        Log::info($data);
+        $withdraw = Withdraw::find($id);
 
-        if(isset($data['Record_url']) || isset($data['Call_duration'])){
-            $follow = Follow::where('uuid', $data['Call_id'])->first();
-            if($follow){
-                $record_url = $data['Record_url'] ? $data['Record_url'] : '';
-                if($record_url){
-                    $record_url = str_replace( 'https://', 'http://' , $record_url);
-                }
-                $follow->call_duration = $data['Call_duration'] ? $data['Call_duration'] : '';
-                $follow->record_url = $record_url;
-                $follow->save();
-            }
-            return 200;
+        if(!$withdraw || $withdraw->user_id != Auth()->user()->id || $withdraw->status != 2){
+            return $this->setStatusCode(422)->responseError('确认失败');
         }
+
+        $withdraw->status = 3;
+        $withdraw->save();
+
+        return $this->responseSuccess($withdraw, '操作成功');
+    }
+
+    public function complaintList()
+    {
+        $withdraw_list = Complaint::with('withdraw:id,order_no')->where('user_id', Auth()->user()->id)->orderBy('created_at', 'DESC')->get();
+
+        return $this->responseSuccess($withdraw_list);
+    }
+
+    public function complaint(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'id'     => 'required|integer',
+                'content' => 'required',
+            ],
+            [
+                'id.required'   => '缺少参数',
+                'id.integer'   => '缺少参数',
+                'content.required'   => '内容不能为空',
+            ]
+        );
+
+        $withdraw = Withdraw::find($data['id']);
+
+        if(!$withdraw || $withdraw->user_id != Auth()->user()->id || !in_array($withdraw->status, [1, 2])){
+            return $this->setStatusCode(422)->responseError('投诉失败');
+        }
+
+        Complaint::updateOrCreate(
+            ['user_id' => $withdraw->user_id, 'withdraw_id' => $withdraw->id],
+            ['content' => $data['content']]
+        );
+
+        return $this->responseSuccess(true, '投诉成功');
     }
 }

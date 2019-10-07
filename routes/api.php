@@ -13,24 +13,24 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::post('send-sms', 'SmsController@sendSms');
-//Route::post('/mobile-called', 'UserController@mobileCalled');    //通话回调
 
+Route::get('/captcha', 'LoginController@captcha');//获取验证码
 Route::post('/login', 'LoginController@login');    //用户登录
+Route::post('/register', 'LoginController@register');    //用户注册
 
 
 //需要认证的API接口
 Route::group(['middleware' => 'auth:api'], function (){
     Route::get('user-info', 'UserController@userInfo'); //用户信息
-    Route::get('customer-list', 'UserController@customerList'); //客户信息
-    Route::get('customer-info/{id}', 'UserController@customerInfo'); //客户信息
-    Route::get('follow-list/{id}/{order}', 'UserController@followList'); //跟进记录
-    Route::get('follow/{id}', 'UserController@getFollow'); //单条跟进记录
-    Route::post('follow', 'UserController@follow'); //盯一下
-    Route::post('follow-edit', 'UserController@followEdit'); //修改跟进记录
-    Route::get('customer-end/{id}', 'UserController@customerEnd'); //结束拜访
-    Route::post('customer/{id?}', 'UserController@addCustomer'); //客户信息保存
-    Route::get('call-mobile/{id}', 'UserController@callMobile'); //拨打电话
-
-    Route::get('customer-industry-and-source', 'UserController@customerIndustryAndSource'); //客户信息保存
+    Route::post('update-name', 'UserController@updateName'); //更新用户姓名
+    Route::post('update-password', 'UserController@updatePassword'); //更新用户密码
+    Route::post('update-bankname', 'UserController@updateBankname'); //更新用户开户行
+    Route::post('update-bankcard', 'UserController@updateBankcard'); //更新用户银行卡
+    Route::post('upload', 'UserController@uploadImage'); //上传图片
+    Route::post('save-deposit', 'UserController@saveDeposit'); //保存保证金
+    Route::post('withdraw', 'UserController@withdraw'); //提现申请
+    Route::get('withdraw', 'UserController@withdrawList'); //提现列表
+    Route::get('withdraw-conform/{id}', 'UserController@withdrawConform'); //确认提现成功
+    Route::post('complaint', 'UserController@complaint'); //投诉
+    Route::get('complaint-list', 'UserController@complaintList'); //投诉列表
 });

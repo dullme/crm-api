@@ -5,6 +5,8 @@ namespace App\Providers;
 use Carbon\Carbon;
 use Validator;
 use Illuminate\Support\ServiceProvider;
+use Encore\Admin\Config\Config;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Carbon::setLocale('zh');
+
+        $table = config('admin.extensions.config.table', 'admin_config');
+        if (Schema::hasTable($table)) {
+            Config::load();
+        }
 
         /**
          * 手机号验证
