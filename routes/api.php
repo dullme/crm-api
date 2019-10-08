@@ -33,4 +33,8 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('withdraw-conform/{id}', 'UserController@withdrawConform'); //确认提现成功
     Route::post('complaint', 'UserController@complaint'); //投诉
     Route::get('complaint-list', 'UserController@complaintList'); //投诉列表
+    Route::get('messages', 'UserController@messages'); //我的消息
+    Route::get('message-count', 'UserController@message'); //我的未读消息数量
+    Route::get('deposit-count', 'UserController@depositCount'); //保证金
+    Route::get('grab-order', 'UserController@grabOrder'); //抢单
 });

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Complaint;
 use App\Deposit;
+use App\Message;
 use App\User;
 use App\Withdraw;
 use Log;
+use DB;
 use App\Customer;
 use App\CustomerIndustry;
 use App\CustomerSource;
@@ -248,5 +250,82 @@ class UserController extends ResponseController
         );
 
         return $this->responseSuccess(true, '投诉成功');
+    }
+
+    public function message()
+    {
+        $message = Message::where([
+            'user_id' => Auth()->user()->id,
+            'is_read' => false
+        ])->count();
+
+        return $this->responseSuccess($message);
+    }
+
+    public function messages()
+    {
+        $message_list = Message::where('user_id', Auth()->user()->id)->orderBy('created_at', 'DESC')->take(50)->get();
+
+        Message::whereIn('id', $message_list->pluck('id'))->update(['is_read'=>true]);
+
+        return $this->responseSuccess($message_list);
+    }
+
+    public function depositCount()
+    {
+        $deposit_amount = Deposit::where([
+            'user_id' => Auth()->user()->id,
+            'status' => 1,
+        ])->sum('amount');
+
+        return $this->responseSuccess([
+            'deposit_amount' => $deposit_amount,
+            'withdraw_amount' => Auth()->user()->amount,
+            'index_amount' => 50000
+        ]);
+    }
+
+    public function grabOrder()
+    {
+        $grabAmount = 5000;//可抢金额
+
+        $res = DB::transaction(function () use ($grabAmount) {
+            $count = Withdraw::where('payer_user_id' ,Auth()->user()->id)
+                ->whereIn('status', [1, 2])->count();
+
+            if($count){
+                return [
+                    'status' => false,
+                    'message' => '有未完成单子',
+                ];
+            }
+
+            $Withdraw = Withdraw::inRandomOrder()
+                ->where('user_id', '!=', Auth()->user()->id)
+                ->where('withdraw_amount', '<=', $grabAmount)
+                ->where('status', 0)
+                ->first();
+
+            if($Withdraw){
+                $Withdraw->payer_user_id = Auth()->user()->id;
+                $Withdraw->status = 1;
+
+                return [
+                    'status' => $Withdraw->save(),
+                    'message' => '抢单成功',
+                ];
+            }
+
+            return [
+                'status' => false,
+                'message' => '当前暂无可抢单子',
+            ];
+        });
+
+        if($res['status']){
+            return $this->responseSuccess($res, $res['message']);
+        }
+
+        return $this->setStatusCode(422)->responseError($res['message']);
     }
 }
