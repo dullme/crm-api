@@ -239,10 +239,11 @@ class UserController extends ResponseController
 
         if (!$user_saved || !$withdraw_saved) {
             DB::rollBack(); //回滚
+            return $this->responseSuccess($amount, '提现失败');
         }
         DB::commit();   //保存
 
-        return $this->responseSuccess($amount, '提交成功');
+        return $this->responseSuccess($amount, '提现成功');
     }
 
     public function withdrawConform($id)
