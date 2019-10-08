@@ -52,7 +52,7 @@ class UserController extends ResponseController
             'admin_name' => config('name'),
             'admin_bankname' => config('bankname'),
             'admin_bankcard' => config('bankcard'),
-            'admin_handling_fee' => config('handling_fee'),
+            'admin_operation_fee' => config('operation_fee'),
         ], $request->user()->toArray()));
     }
 
@@ -208,10 +208,11 @@ class UserController extends ResponseController
         $user = User::find(Auth()->user()->id);
         $user_amount = $user->amount;
 
-        $handing_fee = round(config('handling_fee') / 100 * $data['withdraw_amount'], 2);
+        $operation_fee = round(config('operation_fee') / 100 * $data['withdraw_amount'], 2);
+        $brokerage_fee = round(config('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
 
         $withdraw_big_number = bigNumber($data['withdraw_amount']);
-        $withdraw_amount = $withdraw_big_number->add($handing_fee);
+        $withdraw_amount = $withdraw_big_number->add($operation_fee);
 
         if($withdraw_amount > $user_amount){
             return $this->setStatusCode(422)->responseError('金额不足');
@@ -227,7 +228,8 @@ class UserController extends ResponseController
             'order_no' => time().randStr(6),
             'amount' => $user_amount, //未扣除前余额
             'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
-            'handing_fee' => $handing_fee, //手续费
+            'operation_fee' => $operation_fee, //平台运营手续费
+            'brokerage_fee' => $brokerage_fee, //佣金
             'name' => Auth()->user()->name,
             'bankname' => Auth()->user()->bank_name,
             'bankcard' => Auth()->user()->bank_card,
