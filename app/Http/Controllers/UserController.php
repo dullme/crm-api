@@ -205,6 +205,8 @@ class UserController extends ResponseController
             ]
         );
 
+        DB::beginTransaction(); //开启事务
+
         $user = User::find(Auth()->user()->id);
         $user_amount = $user->amount;
 
@@ -221,9 +223,9 @@ class UserController extends ResponseController
         $user_big_number = bigNumber($user_amount);
         $amount = $user_big_number->subtract($withdraw_amount)->getValue();
         $user->amount =$amount;
-        $user->save();
+        $user_saved = $user->save();
 
-        Withdraw::create([
+        $withdraw_saved = Withdraw::create([
             'user_id' => $user->id,
             'order_no' => time().randStr(6),
             'amount' => $user_amount, //未扣除前余额
@@ -234,6 +236,11 @@ class UserController extends ResponseController
             'bankname' => Auth()->user()->bank_name,
             'bankcard' => Auth()->user()->bank_card,
         ]);
+
+        if (!$user_saved || !$withdraw_saved) {
+            DB::rollBack(); //回滚
+        }
+        DB::commit();   //保存
 
         return $this->responseSuccess($amount, '提交成功');
     }
