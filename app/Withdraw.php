@@ -13,7 +13,7 @@ class Withdraw extends Model
         'amount',
         'withdraw_amount',
         'operation_fee',
-        'brokerage',
+        'brokerage_fee',
         'name',
         'bankname',
         'bankcard',
