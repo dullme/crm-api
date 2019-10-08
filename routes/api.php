@@ -37,4 +37,7 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('message-count', 'UserController@message'); //我的未读消息数量
     Route::get('deposit-count', 'UserController@depositCount'); //保证金
     Route::get('grab-order', 'UserController@grabOrder'); //抢单
+    Route::get('grab', 'UserController@grab'); //已抢的订单
+    Route::post('save-grab', 'UserController@saveGrab'); //我已付款
+    Route::get('transaction-list', 'UserController@transactionList'); //我的交易
 });

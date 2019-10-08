@@ -12,6 +12,7 @@ class Complaint extends Model
         'content',
         'replay',
         'status',
+        'type',
     ];
 
     public function withdraw()

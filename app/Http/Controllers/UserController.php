@@ -42,6 +42,7 @@ class UserController extends ResponseController
     {
         return $this->responseSuccess(array_merge([
             'bankname_list' => [
+                '请选择',
                 '中国建设银行',
                 '中国农业银行',
                 '中国银行',
@@ -94,6 +95,10 @@ class UserController extends ResponseController
             ['bankname'     => 'required'],
             ['bankname.required'   => '开户行不能为空']
         );
+
+        if($data['bankname'] == '请选择'){
+            return $this->setStatusCode(422)->responseError('请选择开户行');
+        }
 
         $user = User::find(Auth()->user()->id);
         $user->bank_name = $data['bankname'];
@@ -148,6 +153,34 @@ class UserController extends ResponseController
             'bankcard' => config('bankcard'),
             'images' => implode(';', $data['images']),
         ]);
+
+        return $this->responseSuccess($data, '提交成功');
+    }
+
+
+    public function saveGrab(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'id'     => 'required|integer',
+                'images'     => 'required',
+            ],
+            [
+                'id.required'   => '缺少参数',
+                'id.integer'   => '缺少参数',
+                'images.required'   => '请上传图片',
+            ]
+        );
+
+        $grab = Withdraw::find($data['id']);
+
+        if(!$grab || $grab->payer_user_id != Auth()->user()->id || $grab->status != 1){
+            return $this->setStatusCode(422)->responseError('当前状态错误');
+        }
+
+        $grab->status = 2;//已付款
+        $grab->images = implode(';', $data['images']);//已付款
+        $grab->save();
 
         return $this->responseSuccess($data, '提交成功');
     }
@@ -240,14 +273,25 @@ class UserController extends ResponseController
 
         $withdraw = Withdraw::find($data['id']);
 
-        if(!$withdraw || $withdraw->user_id != Auth()->user()->id || !in_array($withdraw->status, [1, 2])){
+        if(!$withdraw || !in_array($withdraw->status, [1, 2])){
             return $this->setStatusCode(422)->responseError('投诉失败');
         }
 
-        Complaint::updateOrCreate(
-            ['user_id' => $withdraw->user_id, 'withdraw_id' => $withdraw->id],
-            ['content' => $data['content']]
-        );
+        if($withdraw->user_id == Auth()->user()->id){
+            //投诉提现单子
+            Complaint::updateOrCreate(
+                ['user_id' => $withdraw->user_id, 'withdraw_id' => $withdraw->id, 'type' => 2],
+                ['content' => $data['content']]
+            );
+        }elseif ($withdraw->payer_user_id == Auth()->user()->id){
+            //投诉付款单子
+            Complaint::updateOrCreate(
+                ['user_id' => $withdraw->payer_user_id, 'withdraw_id' => $withdraw->id, 'type' => 1],
+                ['content' => $data['content']]
+            );
+        }else{
+            return $this->setStatusCode(422)->responseError('无法投诉');
+        }
 
         return $this->responseSuccess(true, '投诉成功');
     }
@@ -291,7 +335,7 @@ class UserController extends ResponseController
 
         $res = DB::transaction(function () use ($grabAmount) {
             $count = Withdraw::where('payer_user_id' ,Auth()->user()->id)
-                ->whereIn('status', [1, 2])->count();
+                ->whereIn('status', [1])->count();
 
             if($count){
                 return [
@@ -318,7 +362,7 @@ class UserController extends ResponseController
 
             return [
                 'status' => false,
-                'message' => '当前暂无可抢单子',
+                'message' => '暂无可抢单子',
             ];
         });
 
@@ -327,5 +371,22 @@ class UserController extends ResponseController
         }
 
         return $this->setStatusCode(422)->responseError($res['message']);
+    }
+
+    public function grab()
+    {
+        $withdraw = Withdraw::where([
+            'payer_user_id' => Auth()->user()->id,
+            'status' => 1,
+        ])->first();
+
+        return $this->responseSuccess($withdraw);
+    }
+
+    public function transactionList()
+    {
+        $withdraw_list = Withdraw::where('payer_user_id', Auth()->user()->id)->whereIn('status', [2, 3])->orderBy('created_at', 'DESC')->get();
+
+        return $this->responseSuccess($withdraw_list);
     }
 }
