@@ -56,4 +56,9 @@ class User extends Authenticatable
         $userModel = config('admin.database.users_model');
         return $this->belongsTo($userModel);
     }
+
+    public function withdraw()
+    {
+        return $this->hasMany(Withdraw::class, 'payer_user_id', 'id');
+    }
 }

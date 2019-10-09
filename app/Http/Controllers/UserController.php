@@ -61,6 +61,23 @@ class UserController extends ResponseController
         ], $request->user()->toArray()));
     }
 
+    public function myTeam()
+    {
+        $user = User::with(['withdraw' => function($query){
+            $query->whereDate('created_at', Carbon::today());
+        }])->where('pid', Auth()->user()->id)->get();
+
+        $data = $user->map(function ($item){
+            return [
+                'name' => $item->name,
+                'today_water' => number_format($item->withdraw->sum('withdraw_amount'), 2),
+                'brokerage_fee' => number_format($item->withdraw->sum('brokerage_fee'), 2),
+            ];
+        });
+
+        return $this->responseSuccess($data);
+    }
+
     /**
      * 更新用户姓名
      * @param Request $request
