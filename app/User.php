@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'pid',
+        'status',
         'amount',
         'username',
         'name',

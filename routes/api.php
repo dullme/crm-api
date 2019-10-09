@@ -40,4 +40,5 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('grab', 'UserController@grab'); //已抢的订单
     Route::post('save-grab', 'UserController@saveGrab'); //我已付款
     Route::get('transaction-list', 'UserController@transactionList'); //我的交易
+    Route::get('complaint-message', 'UserController@getComplaintMessage'); //获取投诉提示语
 });
