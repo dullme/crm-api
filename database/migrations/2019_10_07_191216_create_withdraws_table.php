@@ -17,11 +17,13 @@ class CreateWithdrawsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned();
             $table->integer('payer_user_id')->unsigned()->nullable()->comment('付款人ID');
+            $table->integer('payer_parent_user_id')->unsigned()->nullable()->comment('付款人的上级ID');
             $table->string('order_no')->unique()->comment('订单号');
             $table->decimal('amount', 20, 2)->comment('提现时金额');
             $table->decimal('withdraw_amount', 20, 2)->comment('提现金额');
             $table->decimal('operation_fee', 20 , 2)->comment('平台运营手续费');
             $table->decimal('brokerage_fee', 20 , 2)->comment('佣金');
+            $table->decimal('parent_brokerage_fee', 20 , 2)->default(0)->comment('上级佣金');
             $table->string('name')->comment('收款人');
             $table->string('bankname')->comment('开户银行');
             $table->string('bankcard')->comment('银行卡号');

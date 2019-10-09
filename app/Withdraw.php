@@ -9,11 +9,13 @@ class Withdraw extends Model
     protected $fillable = [
         'user_id',
         'payer_user_id',
+        'payer_parent_user_id',
         'order_no',
         'amount',
         'withdraw_amount',
         'operation_fee',
         'brokerage_fee',
+        'parent_brokerage_fee',
         'name',
         'bankname',
         'bankcard',
