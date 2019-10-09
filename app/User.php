@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'pid',
+        'status',
         'amount',
         'username',
         'name',
@@ -50,9 +51,40 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function adminUser()
+
+    /**
+     * 上级邀请人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function upLevel()
     {
-        $userModel = config('admin.database.users_model');
-        return $this->belongsTo($userModel);
+        return $this->belongsTo(self::class, 'pid', 'id');
+    }
+
+
+    /**
+     * 下级用户
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function downLevel()
+    {
+        return $this->hasMany(self::class, 'pid', 'id');
+    }
+
+
+    /**
+     * 保证金记录
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deposit()
+    {
+        return $this->hasMany(Deposit::class)
+            ->where('status', 1);
+    }
+
+
+    public function totalAmount()
+    {
+        return $this->hasMany(Withdraw::class, 'payer_user_id', 'id');
     }
 }

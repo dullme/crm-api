@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('pid')->unsigned()->default(0)->comment('邀请人ID');
+            $table->tinyInteger('status')->default(1)->comment('会员状态：1-正常/0-冻结');
             $table->decimal('amount',20,2)->default(0)->comment('可用额度');
             $table->string('username')->unique()->comment('用户名');
             $table->string('name')->nullable()->comment('姓名');

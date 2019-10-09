@@ -3,10 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\User;
+use Carbon\Carbon;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
 class UserController extends AdminController
@@ -16,7 +16,7 @@ class UserController extends AdminController
      *
      * @var string
      */
-    protected $title = '员工管理';
+    protected $title = '会员管理';
 
     /**
      * Make a grid builder.
@@ -26,16 +26,66 @@ class UserController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User);
-        if(Auth('admin')->user()->id ==1 || Auth('admin')->user()->name == '管理员' || Auth('admin')->user()->username == 'admin'){}else{
-            $grid->model()->where('admin_user_id', Auth('admin')->user()->id);
-        }
-        $grid->column('admin_name', __('大客户'))->display(function (){
-            return optional($this->adminUser)->username;
+
+        //筛选框
+        $grid->filter(function ($filter){
+            $filter->like('username', '会员账号');
+            $filter->like('name', '会员姓名');
+            $filter->equal('upLevel.invitation_code', '上级推广码');
         });
-        $grid->column('id', __('ID'));
-        $grid->column('mobile', __('手机号'));
-        $grid->column('name', __('名称'));
-        $grid->column('created_at', __('创建时间'));
+
+        $grid->column('id', __('Id'));
+        $grid->column('username', __('会员账号'));
+        $grid->column('bank_card', __('银行卡号'));
+        $grid->column('bank_name', __('发卡行'));
+        $grid->column('name', __('会员姓名'));
+        $grid->column('amount', __('剩余金币'))->sortable();
+        $grid->column('保证金(元)')->display(function (){
+            return bigNumber(optional($this->deposit)->sum('amount'))->getValue();
+
+        });
+
+        $grid->column('上级推广编码')->display(function (){
+            $uplevel = optional($this->upLevel)->invitation_code;
+
+            if ($uplevel){
+                return $uplevel;
+            }else{
+                return "";
+            }
+
+        })->copyable();
+
+        $grid->column('created_at', __('注册时间'));
+
+        $grid->column('当日交易额(元)')->display(function (){
+            $today_amount = $this->totalAmount->whereBetween('created_at', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]);
+            return bigNumber(optional($today_amount)->sum('withdraw_amount'))->getValue();
+        });
+
+        $grid->column('总交易额(元)')->display(function (){
+            return bigNumber(optional($this->totalAmount)->sum('withdraw_amount'))->getValue();
+        })->sortable();
+
+        $grid->column('下级用户(人)')->display(function (){
+            return optional($this->downLevel)->count();
+        });
+
+        $grid->column('status', __('状态'))->display(function ($status){
+            if ($status == 0){
+                $label = "<a class='label label-danger'>冻结</a>";
+            }else{
+                $label = "<a class='label label-success'>正常</a>";
+            }
+
+            return $label;
+        });
+
+        //操作栏
+        $grid->actions(function ($actions){
+            $actions->disableView();
+            $actions->disableDelete();
+        });
 
         return $grid;
     }
@@ -50,19 +100,22 @@ class UserController extends AdminController
     {
         $show = new Show(User::findOrFail($id));
 
-        $show->field('id', __('ID'));
-        $show->field('mobile', __('手机号'));
-        $show->field('name', __('名称'));
+        $show->field('id', __('Id'));
+        $show->field('pid', __('Pid'));
+        $show->field('status', __('Status'));
+        $show->field('amount', __('Amount'));
+        $show->field('username', __('Username'));
+        $show->field('name', __('Name'));
+        $show->field('invitation_code', __('Invitation code'));
+        $show->field('bank_name', __('Bank name'));
+        $show->field('bank_card', __('Bank card'));
+        $show->field('email_verified_at', __('Email verified at'));
+        $show->field('password', __('Password'));
+        $show->field('remember_token', __('Remember token'));
+        $show->field('created_at', __('Created at'));
+        $show->field('updated_at', __('Updated at'));
 
         return $show;
-    }
-
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->title($this->title())
-            ->description($this->description['edit'] ?? trans('admin.edit'))
-            ->body($this->form()->edit($id));
     }
 
     /**
@@ -74,32 +127,17 @@ class UserController extends AdminController
     {
         $form = new Form(new User);
 
-        $form->hidden('admin_user_id');
-        $form->mobile('mobile', __('手机号'))->rules(function ($form){
-            return 'required|unique:users,mobile,'.$form->model()->id;
-        },[
-            'required' => '请输入手机号',
-            'unique' => '手机号已存在'
-        ]);
-        $form->text('name', __('名称'))->rules('required');
-        $form->password('password', __('密码'))->rules('required|confirmed')->default(function ($form){
-            return $form->model()->password;
-        });
-        $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')->default(function ($form) {
+        $form->switch('status', __('状态'))->default(1);
+        $form->text('username', __('用户名'));
+        $form->text('name', __('实名'));
+        $form->text('invitation_code', __('邀请码'));
+        $form->text('bank_name', __('开户行'));
+        $form->text('bank_card', __('银行卡号'));
+        $form->password('password', __('密码'))->required()->rules('required')->default(function ($form){
             return $form->model()->password;
         });
 
-        $form->ignore(['password_confirmation']);
-
-        $form->saving(function (Form $form) {
-            if(!$form->model()->id){
-                $user_count = User::where('admin_user_id', Auth('admin')->user()->id)->count();
-                if(Auth('admin')->user()->can_create <= $user_count){
-                    return back()->with(admin_toastr('用户创建已达上限', 'error'));
-                }
-            }
-
-            $form->admin_user_id = Auth('admin')->user()->id;
+        $form->saving(function (Form $form){
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = bcrypt($form->password);
             }
