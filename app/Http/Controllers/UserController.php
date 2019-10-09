@@ -296,7 +296,7 @@ class UserController extends ResponseController
 
         if (!$user_saved || !$withdraw_saved) {
             DB::rollBack(); //回滚
-            return $this->responseSuccess($amount, '提现失败');
+            return $this->setStatusCode(422)->responseError('提现失败');
         }
         DB::commit();   //保存
 
@@ -316,14 +316,38 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('确认失败');
         }
 
-        $withdraw->status = 3;
-        $withdraw->save();
+        DB::beginTransaction(); //开启事务
 
-        Message::create([
+        //给打款人加钱
+        $payer_user_add_withdraw_amount = bigNumber($withdraw->withdraw_amount);//打款金额
+        $payer_user_add_amount = $payer_user_add_withdraw_amount->add($withdraw->brokerage_fee)->getValue();//打款金额+佣金
+        $user_saved = User::where('id', $withdraw->payer_user_id)->increment('amount', $payer_user_add_amount);//给打款方加钱
+
+        //给打款方上级加钱
+        if($withdraw->payer_parent_user_id && $withdraw->parent_brokerage_fee != 0){
+            $payer_user_saved = User::where('id', $withdraw->payer_parent_user_id)->increment('amount', $withdraw->parent_brokerage_fee);//给打款方的上级加钱
+            if (!$payer_user_saved) {
+                DB::rollBack(); //回滚
+                return $this->setStatusCode(422)->responseError('确认失败');
+            }
+        }
+
+        $withdraw->status = 3;
+        $withdraw_saved = $withdraw->save();
+
+
+
+        $message_saved = Message::create([
             'user_id' => $withdraw->payer_user_id,
             'title' => '交易确认',
             'content' => config('payment_confirmed_message'),
         ]);
+
+        if (!$user_saved || !$withdraw_saved || !$message_saved) {
+            DB::rollBack(); //回滚
+            return $this->setStatusCode(422)->responseError('确认失败');
+        }
+        DB::commit();   //保存
 
         return $this->responseSuccess($withdraw, '操作成功');
     }
@@ -486,6 +510,12 @@ class UserController extends ResponseController
 
             if($Withdraw){
                 $Withdraw->payer_user_id = Auth()->user()->id;
+                if(Auth()->user()->pid){
+                    $Withdraw->payer_parent_user_id = Auth()->user()->pid;
+                    $parent_brokerage_fee = round(config('parent_brokerage_fee') / 100 * $Withdraw->withdraw_amount, 2);
+                    $Withdraw->parent_brokerage_fee = bigNumber($parent_brokerage_fee)->getValue();
+                }
+
                 $Withdraw->status = 1;
 
                 return [
