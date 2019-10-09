@@ -75,6 +75,8 @@ class UserController extends ResponseController
             ];
         });
 
+        $data->orderBy('today_water', 'DESC');
+
         return $this->responseSuccess($data);
     }
 
