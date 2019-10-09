@@ -15,4 +15,10 @@ class Deposit extends Model
         'images',
         'status',
     ];
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

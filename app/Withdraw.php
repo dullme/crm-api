@@ -23,4 +23,10 @@ class Withdraw extends Model
         'remarks',
         'images',
     ];
+
+
+    public function payer()
+    {
+        return $this->belongsTo(User::class, 'payer_user_id', 'id');
+    }
 }
