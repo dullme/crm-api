@@ -192,13 +192,17 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('有待审核的保证金');
         }
 
+        $images = collect($data['images'])->map(function ($item){
+            return preg_replace('/(http.*?storage\/)/i','', $item);
+        })->toJson();
+
         Deposit::create([
             'user_id' => Auth()->user()->id,
             'amount' => $data['amount'],
             'name' => config('name'),
             'bankname' => config('bankname'),
             'bankcard' => config('bankcard'),
-            'images' => implode(';', $data['images']),
+            'images' => $images,
         ]);
 
         return $this->responseSuccess($data, config('deposit_submit_message'));
@@ -230,8 +234,12 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('当前状态错误');
         }
 
+        $images = collect($data['images'])->map(function ($item){
+            return preg_replace('/(http.*?storage\/)/i','', $item);
+        })->toJson();
+
         $grab->status = 2;//已付款
-        $grab->images = implode(';', $data['images']);//已付款
+        $grab->images = $images;//已付款
         $grab->save();
 
         Message::create([
