@@ -17,4 +17,5 @@ Route::group([
     $router->resource('customer-industries', CustomerIndustryController::class);
     $router->resource('withdraws', WithdrawController::class);
     $router->resource('deposits', DepositController::class);
+    $router->resource('banks', BankController::class);
 });

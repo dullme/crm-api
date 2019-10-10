@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Bank;
 use App\Complaint;
 use App\Deposit;
+use App\Help;
 use App\Message;
 use App\User;
 use App\Withdraw;
@@ -45,15 +47,15 @@ class UserController extends ResponseController
      */
     public function userInfo(Request $request)
     {
+        $bankname_list = Bank::where('status', true)->select('icon', 'bank_name')->get();
+        $bankname_list->map(function ($item){
+            $item['icon'] = url($item['icon']);
+            return $item;
+        });
+
         return $this->responseSuccess(array_merge([
-            'bankname_list' => [
-                '请选择',
-                '中国建设银行',
-                '中国农业银行',
-                '中国银行',
-                '中国工商银行',
-                '中国邮政储蓄银行'
-            ],
+            'user_bank_image' => optional($bankname_list->where('bank_name', $request->user()->bank_name)->first())->icon,
+            'bankname_list' => $bankname_list->pluck('bank_name'),
             'admin_name' => config('name'),
             'admin_bankname' => config('bankname'),
             'admin_bankcard' => config('bankcard'),
@@ -61,17 +63,24 @@ class UserController extends ResponseController
         ], $request->user()->toArray()));
     }
 
+    /**
+     * 我的团队
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function myTeam()
     {
         $user = User::with(['withdraw' => function($query){
-            $query->whereDate('created_at', Carbon::today());
-        }])->where('pid', Auth()->user()->id)->get();
+            $query->where('status', 3)->whereDate('created_at', Carbon::today());
+        }])->where([
+            'pid' => Auth()->user()->id,
+        ])->get();
 
         $data = $user->map(function ($item){
             return [
                 'name' => $item->name,
                 'today_water' => number_format($item->withdraw->sum('withdraw_amount'), 2),
                 'brokerage_fee' => number_format($item->withdraw->sum('brokerage_fee'), 2),
+                'parent_brokerage_fee' => number_format($item->withdraw->sum('parent_brokerage_fee'), 2),
             ];
         });
 
@@ -606,6 +615,24 @@ class UserController extends ResponseController
     public function getComplaintMessage()
     {
         return $this->responseSuccess(config('complaint_message'));
+    }
+
+    /**
+     * 帮助列表
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function helpList()
+    {
+        $helps = Help::orderBy('created_at', 'DESC')->get();
+        $helps = $helps->map(function ($item){
+            $item['display'] = false;
+            return $item;
+        });
+
+        return $this->responseSuccess([
+            'helps' => $helps,
+            'message' => config('announcement')
+        ]);
     }
 
     /**

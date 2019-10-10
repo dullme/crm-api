@@ -42,4 +42,5 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('transaction-list', 'UserController@transactionList'); //我的交易
     Route::get('complaint-message', 'UserController@getComplaintMessage'); //获取投诉提示语
     Route::get('my-team', 'UserController@myTeam'); //我的团队
+    Route::get('help-list', 'UserController@helpList'); //我的帮助
 });
