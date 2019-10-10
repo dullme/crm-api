@@ -45,16 +45,7 @@ class UserController extends AdminController
 
         });
 
-        $grid->column('上级推广编码')->display(function (){
-            $uplevel = optional($this->upLevel)->invitation_code;
-
-            if ($uplevel){
-                return $uplevel;
-            }else{
-                return "";
-            }
-
-        })->copyable();
+        $grid->column('upLevel.invitation_code','上级推广编码')->copyable();
 
         $grid->column('created_at', __('注册时间'));
 
