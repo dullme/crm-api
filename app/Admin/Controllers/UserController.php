@@ -118,7 +118,10 @@ class UserController extends AdminController
     {
         $form = new Form(new User);
 
-        $form->switch('status', __('状态'))->default(1);
+        $form->switch('status', __('状态'))->states([
+            'on'  => ['value' => 1, 'text' => '正常', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '冻结', 'color' => 'danger'],
+        ])->default(1);
         $form->text('username', __('用户名'));
         $form->text('name', __('实名'));
         $form->text('invitation_code', __('邀请码'));

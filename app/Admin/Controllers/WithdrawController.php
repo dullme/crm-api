@@ -32,6 +32,11 @@ class WithdrawController extends AdminController
             $filter->equal('order_no', '订单号');
         });
 
+        //操作栏
+        $grid->actions(function ($actions){
+            $actions->disableView();
+        });
+
         $grid->column('id', __('Id'));
         $grid->column('order_no', __('订单号'));
         $grid->column('withdraw_amount', __('订单金额'));

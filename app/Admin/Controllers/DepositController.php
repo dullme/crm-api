@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Deposit\ReviewDeposit;
 use App\Deposit;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -26,6 +27,18 @@ class DepositController extends AdminController
     {
         $grid = new Grid(new Deposit);
 
+        //筛选框
+        $grid->actions(function ($actions){
+            //详情
+            $actions->disableView();
+            //编辑
+            $actions->disableEdit();
+            //审核
+            if ($actions->row->status == 0){
+                $actions->add(new ReviewDeposit());
+            }
+        });
+
         $grid->column('id', __('Id'));
         $grid->column('会员账号')->display(function (){
             return $this->user->username;
@@ -39,7 +52,7 @@ class DepositController extends AdminController
         $grid->column('images', __('汇款回执单'))->display(function ($picture){
             return json_decode($picture);
         })->gallery(['width' => 100, 'height' => 100]);;
-        $grid->column('status', __('状态'));
+        $grid->column('status', __('状态'))->using([0 => '待审核', 1 => '已审核']);
         $grid->column('created_at', __('汇款时间'));
 
         return $grid;
