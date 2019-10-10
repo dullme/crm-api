@@ -22,6 +22,8 @@ class Withdraw extends Model
         'status',
         'remarks',
         'images',
+        'payment_at',
+        'grab_at',
     ];
 
     public function user()

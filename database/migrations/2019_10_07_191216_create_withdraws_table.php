@@ -30,6 +30,8 @@ class CreateWithdrawsTable extends Migration
             $table->text('images')->nullable()->comment('图片');
             $table->string('remarks')->nullable()->comment('备注');
             $table->integer('status')->default(0)->comment('状态0:待抢单；1:已接单;2:已出款;3:交易正常;4:交易取消');
+            $table->timestamp('grab_at')->nullable()->comment('抢单时间');
+            $table->timestamp('payment_at')->nullable()->comment('确认付款时间');
             $table->timestamps();
         });
     }

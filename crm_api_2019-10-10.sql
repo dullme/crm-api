@@ -5,9 +5,9 @@
 # https://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 127.0.0.1 (MySQL 8.0.16)
+# Host: 127.0.0.1 (MySQL 5.7.27-0ubuntu0.18.04.1)
 # Database: crm_api
-# Generation Time: 2019-10-10 09:15:40 +0000
+# Generation Time: 2019-10-10 09:29:20 +0000
 # ************************************************************
 
 
@@ -28,9 +28,9 @@ DROP TABLE IF EXISTS `admin_config`;
 
 CREATE TABLE `admin_config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -78,10 +78,10 @@ CREATE TABLE `admin_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `order` int(11) NOT NULL DEFAULT '0',
-  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `uri` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `permission` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uri` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permission` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -119,10 +119,10 @@ DROP TABLE IF EXISTS `admin_operation_log`;
 CREATE TABLE `admin_operation_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `method` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `input` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `input` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1221,7 +1221,25 @@ VALUES
 	(1085,1,'admin/auth/menu','GET','127.0.0.1','[]','2019-10-10 17:15:06','2019-10-10 17:15:06'),
 	(1086,1,'admin/auth/menu','GET','127.0.0.1','[]','2019-10-10 17:15:07','2019-10-10 17:15:07'),
 	(1087,1,'admin/auth/menu','GET','127.0.0.1','[]','2019-10-10 17:15:07','2019-10-10 17:15:07'),
-	(1088,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:15:20','2019-10-10 17:15:20');
+	(1088,1,'admin/auth/users','GET','127.0.0.1','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:15:20','2019-10-10 17:15:20'),
+	(1089,1,'admin','GET','60.12.220.56','[]','2019-10-10 17:18:46','2019-10-10 17:18:46'),
+	(1090,1,'admin/users','GET','60.12.220.56','[]','2019-10-10 17:18:46','2019-10-10 17:18:46'),
+	(1091,1,'admin/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:52','2019-10-10 17:18:52'),
+	(1092,1,'admin/users/create','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:53','2019-10-10 17:18:53'),
+	(1093,1,'admin/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:55','2019-10-10 17:18:55'),
+	(1094,1,'admin/deposits','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:56','2019-10-10 17:18:56'),
+	(1095,1,'admin/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:57','2019-10-10 17:18:57'),
+	(1096,1,'admin/users/create','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:18:59','2019-10-10 17:18:59'),
+	(1097,1,'admin/withdraws','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:02','2019-10-10 17:19:02'),
+	(1098,1,'admin/complaints','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:03','2019-10-10 17:19:03'),
+	(1099,1,'admin/helps','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:04','2019-10-10 17:19:04'),
+	(1100,1,'admin/messages','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:05','2019-10-10 17:19:05'),
+	(1101,1,'admin/auth/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:06','2019-10-10 17:19:06'),
+	(1102,1,'admin/config','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:08','2019-10-10 17:19:08'),
+	(1103,1,'admin/banks','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:08','2019-10-10 17:19:08'),
+	(1104,1,'admin/helps','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:19:09','2019-10-10 17:19:09'),
+	(1105,1,'admin/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:20:37','2019-10-10 17:20:37'),
+	(1106,1,'admin/users','GET','60.12.220.56','{\"_pjax\":\"#pjax-container\"}','2019-10-10 17:20:38','2019-10-10 17:20:38');
 
 /*!40000 ALTER TABLE `admin_operation_log` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1234,10 +1252,10 @@ DROP TABLE IF EXISTS `admin_permissions`;
 
 CREATE TABLE `admin_permissions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `http_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `http_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `http_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `http_path` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1410,8 +1428,8 @@ DROP TABLE IF EXISTS `admin_roles`;
 
 CREATE TABLE `admin_roles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1452,11 +1470,11 @@ DROP TABLE IF EXISTS `admin_users`;
 
 CREATE TABLE `admin_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1482,10 +1500,10 @@ DROP TABLE IF EXISTS `banks`;
 CREATE TABLE `banks` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态',
-  `bank_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '银行名称',
-  `bank_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '银行编码',
-  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '银行logo',
-  `background` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行卡背景',
+  `bank_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '银行名称',
+  `bank_code` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '银行编码',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '银行logo',
+  `background` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行卡背景',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -1502,8 +1520,8 @@ CREATE TABLE `complaints` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `withdraw_id` int(11) NOT NULL COMMENT '提现单ID',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `replay` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '回复',
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+  `replay` text COLLATE utf8mb4_unicode_ci COMMENT '回复',
   `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型1:我付款的单子；2:我提现的单子',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态0:待受理；1:客服处理中;2:交易正常;3:交易取消',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1523,10 +1541,10 @@ CREATE TABLE `deposits` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `amount` int(11) NOT NULL COMMENT '金额',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收款人',
-  `bankname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '开户银行',
-  `bankcard` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '银行卡号',
-  `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收款人',
+  `bankname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '开户银行',
+  `bankcard` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '银行卡号',
+  `images` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态0:待审核；1:已确认',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1570,8 +1588,8 @@ DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '详情',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '详情',
   `type` int(11) NOT NULL DEFAULT '0' COMMENT '消息类型',
   `is_read` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已读',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1588,7 +1606,7 @@ DROP TABLE IF EXISTS `migrations`;
 
 CREATE TABLE `migrations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1624,11 +1642,11 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_access_tokens`;
 
 CREATE TABLE `oauth_access_tokens` (
-  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) DEFAULT NULL,
   `client_id` int(10) unsigned NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1676,10 +1694,10 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_auth_codes`;
 
 CREATE TABLE `oauth_auth_codes` (
-  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `client_id` int(10) unsigned NOT NULL,
-  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -1695,9 +1713,9 @@ DROP TABLE IF EXISTS `oauth_clients`;
 CREATE TABLE `oauth_clients` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `redirect` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `personal_access_client` tinyint(1) NOT NULL,
   `password_client` tinyint(1) NOT NULL,
   `revoked` tinyint(1) NOT NULL,
@@ -1750,8 +1768,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `oauth_refresh_tokens`;
 
 CREATE TABLE `oauth_refresh_tokens` (
-  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `access_token_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1766,8 +1784,8 @@ CREATE TABLE `oauth_refresh_tokens` (
 DROP TABLE IF EXISTS `password_resets`;
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   KEY `password_resets_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1784,14 +1802,14 @@ CREATE TABLE `users` (
   `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '邀请人ID',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态1正常；0冻结',
   `amount` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '可用额度',
-  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
-  `invitation_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邀请码',
-  `bank_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行名称',
-  `bank_card` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行卡号',
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `invitation_code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邀请码',
+  `bank_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行名称',
+  `bank_card` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '银行卡号',
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1811,18 +1829,20 @@ CREATE TABLE `withdraws` (
   `user_id` int(10) unsigned NOT NULL,
   `payer_user_id` int(10) unsigned DEFAULT NULL COMMENT '付款人ID',
   `payer_parent_user_id` int(11) DEFAULT NULL COMMENT '付款人的上级ID',
-  `order_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单号',
+  `order_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单号',
   `amount` decimal(20,2) NOT NULL COMMENT '提现时金额',
   `withdraw_amount` decimal(20,2) NOT NULL COMMENT '提现金额',
   `brokerage_fee` decimal(20,2) NOT NULL COMMENT '佣金',
   `parent_brokerage_fee` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '上级佣金',
   `operation_fee` decimal(20,2) NOT NULL COMMENT '平台运营手续费',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收款人',
-  `bankname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '开户银行',
-  `bankcard` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '银行卡号',
-  `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '图片',
-  `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收款人',
+  `bankname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '开户银行',
+  `bankcard` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '银行卡号',
+  `images` text COLLATE utf8mb4_unicode_ci COMMENT '图片',
+  `remarks` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态0:待抢单；1:已接单;2:已出款;3:交易正常;4:交易取消',
+  `grab_at` timestamp NULL DEFAULT NULL COMMENT '抢单时间',
+  `payment_at` timestamp NULL DEFAULT NULL COMMENT '确认付款时间',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),

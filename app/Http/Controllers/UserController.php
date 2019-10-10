@@ -249,6 +249,7 @@ class UserController extends ResponseController
 
         $grab->status = 2;//已付款
         $grab->images = $images;//已付款
+        $grab->payment_at = Carbon::now();//确认付款时间
         $grab->save();
 
         Message::create([
@@ -553,6 +554,7 @@ class UserController extends ResponseController
                 }
 
                 $Withdraw->status = 1;
+                $Withdraw->grab_at = Carbon::now();//抢单时间
 
                 return [
                     'status' => $Withdraw->save(),

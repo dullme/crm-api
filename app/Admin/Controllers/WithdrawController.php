@@ -58,8 +58,8 @@ class WithdrawController extends AdminController
         $grid->column('status', __('状态'))->editable('select',[0 => '待抢单',1 => '已接单', 2 => '已出款', 3 => '已完成']);
 
         $grid->column('created_at', __('提款发起时间'));
-        $grid->column('created_at', __('抢单时间'));
-        $grid->column('created_at', __('确认转账时间'));
+        $grid->column('grab_at', __('抢单时间'));
+        $grid->column('payment_at', __('确认转账时间'));
         $grid->disableExport();
         return $grid;
     }
