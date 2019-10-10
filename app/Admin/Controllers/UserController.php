@@ -77,7 +77,7 @@ class UserController extends AdminController
             $actions->disableView();
             $actions->disableDelete();
         });
-
+        $grid->disableExport();
         return $grid;
     }
 

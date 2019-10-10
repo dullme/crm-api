@@ -54,7 +54,7 @@ class DepositController extends AdminController
         })->gallery(['width' => 100, 'height' => 100]);;
         $grid->column('status', __('状态'))->using([0 => '待审核', 1 => '已审核']);
         $grid->column('created_at', __('汇款时间'));
-
+        $grid->disableExport();
         return $grid;
     }
 

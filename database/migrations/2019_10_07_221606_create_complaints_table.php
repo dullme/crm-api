@@ -20,7 +20,7 @@ class CreateComplaintsTable extends Migration
             $table->text('content')->comment('内容');
             $table->text('replay')->nullable()->comment('回复');
             $table->integer('type')->comment('类型1:我付款的单子；2:我提现的单子');
-            $table->integer('status')->default(0)->comment('状态0:待受理；1:客服处理中;2:处理完毕');
+            $table->integer('status')->default(0)->comment('状态0:待受理；1:客服处理中;2:交易正常;3:交易取消');
             $table->timestamps();
         });
     }

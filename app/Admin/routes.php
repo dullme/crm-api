@@ -11,11 +11,11 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('admin.home');
-    $router->resource('my/users', AdminUserController::class);
     $router->resource('users', UserController::class);
-    $router->resource('customer-sources', CustomerSourceController::class);
-    $router->resource('customer-industries', CustomerIndustryController::class);
     $router->resource('withdraws', WithdrawController::class);
     $router->resource('deposits', DepositController::class);
     $router->resource('banks', BankController::class);
+    $router->resource('helps', HelpController::class);
+    $router->resource('messages', MessageController::class);
+    $router->resource('complaints', ComplaintController::class);
 });

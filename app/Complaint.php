@@ -19,4 +19,9 @@ class Complaint extends Model
     {
         return $this->belongsTo(Withdraw::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

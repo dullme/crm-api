@@ -33,6 +33,7 @@ class BankController extends AdminController
             'off' => ['value'=> 0, 'text' => '禁用'],
         ]);
         $grid->column('created_at', __('添加时间'));
+        $grid->disableExport();
 
         return $grid;
     }

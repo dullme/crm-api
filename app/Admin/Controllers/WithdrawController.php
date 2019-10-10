@@ -60,7 +60,7 @@ class WithdrawController extends AdminController
         $grid->column('created_at', __('提款发起时间'));
         $grid->column('created_at', __('抢单时间'));
         $grid->column('created_at', __('确认转账时间'));
-
+        $grid->disableExport();
         return $grid;
     }
 
