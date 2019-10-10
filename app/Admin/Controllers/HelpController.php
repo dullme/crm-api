@@ -25,7 +25,7 @@ class HelpController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Help);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('id', __('Id'));
         $grid->column('title', __('标题'));
         $grid->column('content', __('详情'))->display(function($text) {

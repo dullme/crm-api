@@ -25,7 +25,7 @@ class WithdrawController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Withdraw);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         //筛选框
         $grid->expandFilter();
         $grid->filter(function ($filter){

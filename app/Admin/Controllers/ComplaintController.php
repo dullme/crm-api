@@ -27,7 +27,7 @@ class ComplaintController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Complaint);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('id', __('Id'));
         $grid->column('userInfo', __('投诉方(账号/姓名)'))->display(function (){
             return $this->user->username.' / '.$this->user->name;

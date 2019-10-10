@@ -26,7 +26,7 @@ class UserController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         //筛选框
         $grid->filter(function ($filter){
             $filter->like('username', '会员账号');

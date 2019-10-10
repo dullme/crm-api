@@ -26,7 +26,7 @@ class DepositController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Deposit);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         //筛选框
         $grid->actions(function ($actions){
             //详情

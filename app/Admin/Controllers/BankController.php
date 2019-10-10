@@ -25,7 +25,7 @@ class BankController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Bank);
-
+        $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('bank_name', __('银行名称'));
         $grid->column('icon', __('图标'))->image('', 100, 100);
         $grid->column('status', __('是否启用'))->switch([
