@@ -27,6 +27,15 @@ class ComplaintController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Complaint);
+
+        //筛选框
+        $grid->expandFilter();
+        $grid->filter(function ($filter){
+            $filter->equal('withdraw.order_no', '订单号');
+            $filter->equal('user.name', '投诉方姓名');
+            $filter->equal('user.username', '投诉方账号');
+        });
+
         $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('id', __('Id'));
         $grid->column('userInfo', __('投诉方(账号/姓名)'))->display(function (){
