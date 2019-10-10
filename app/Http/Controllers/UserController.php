@@ -37,7 +37,7 @@ class UserController extends ResponseController
             return $this->responseError($fileUploaded['message']);
         }
 
-        return $this->responseSuccess(url($fileUploaded['path']), '上传成功');
+        return $this->responseSuccess(url('storage/'.$fileUploaded['path']), '上传成功');
     }
 
     /**
