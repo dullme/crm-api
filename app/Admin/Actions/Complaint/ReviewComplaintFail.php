@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Complaint;
 
+use DB;
 use App\User;
 use App\Withdraw;
 use Encore\Admin\Actions\RowAction;
