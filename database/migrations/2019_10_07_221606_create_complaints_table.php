@@ -16,7 +16,7 @@ class CreateComplaintsTable extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('withdraw_id')->unique()->comment('提现单ID');
+            $table->integer('withdraw_id')->unsigned()->comment('提现单ID');
             $table->text('content')->comment('内容');
             $table->text('replay')->nullable()->comment('回复');
             $table->integer('type')->comment('类型1:我付款的单子；2:我提现的单子');
