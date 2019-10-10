@@ -37,7 +37,7 @@ class UserController extends ResponseController
             return $this->responseError($fileUploaded['message']);
         }
 
-        return $this->responseSuccess(url('storage/'.$fileUploaded['path']), '上传成功');
+        return $this->responseSuccess(url($fileUploaded['path']), '上传成功');
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController extends ResponseController
     {
         $bankname_list = Bank::where('status', true)->select('icon', 'bank_name')->get();
         $bankname_list->map(function ($item){
-            $item['icon'] = url($item['icon']);
+            $item['icon'] = url('storage/'.$item['icon']);
             return $item;
         });
 
