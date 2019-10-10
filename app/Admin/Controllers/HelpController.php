@@ -15,7 +15,7 @@ class HelpController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Help';
+    protected $title = '帮助中心';
 
     /**
      * Make a grid builder.

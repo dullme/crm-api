@@ -17,7 +17,7 @@ class ComplaintController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Complaint';
+    protected $title = '投诉管理';
 
     /**
      * Make a grid builder.

@@ -15,7 +15,7 @@ class BankController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Bank';
+    protected $title = '银行管理';
 
     /**
      * Make a grid builder.
