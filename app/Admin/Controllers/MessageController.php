@@ -29,7 +29,7 @@ class MessageController extends AdminController
         $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('user.name', __('姓名'));
         $grid->column('title', __('标题'));
-        $grid->column('content', __('内容'))>display(function($text) {
+        $grid->column('content', __('内容'))->display(function($text) {
             return str_limit($text, 50, '...');
         });
 //        $grid->column('type', __('Type'));
