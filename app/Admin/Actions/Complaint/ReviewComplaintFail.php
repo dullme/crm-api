@@ -30,6 +30,8 @@ class ReviewComplaintFail extends RowAction
                     $withdraw_amount = bigNumber($withdraw->withdraw_amount);
                     $amount = $withdraw_amount->add($withdraw->operation_fee)->getValue();
                     User::where('id', $withdraw->user_id)->increment('amount', $amount);//取消订单反钱给提现方
+                    $withdraw->status = 4;
+                    $withdraw->save();
                 });
                 return $this->response()->success('交易已取消，资金已退回')->refresh();
             }elseif($withdraw->status == 3){//如果交易单已正常 客服来取消
