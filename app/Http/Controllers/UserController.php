@@ -605,7 +605,7 @@ class UserController extends ResponseController
      */
     public function transactionList()
     {
-        $withdraw_list = Withdraw::where('payer_user_id', Auth()->user()->id)->whereIn('status', [2, 3])->orderBy('created_at', 'DESC')->get();
+        $withdraw_list = Withdraw::where('payer_user_id', Auth()->user()->id)->whereIn('status', [2, 3, 4])->orderBy('created_at', 'DESC')->get();
 
         return $this->responseSuccess($withdraw_list);
     }
