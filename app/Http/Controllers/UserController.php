@@ -34,7 +34,7 @@ class UserController extends ResponseController
     {
         $file = $request->file('file');
         $fileUploaded = upload($file);
-        if (!$fileUploaded['status']){
+        if (!$fileUploaded['status']) {
             return $this->responseError($fileUploaded['message']);
         }
 
@@ -49,19 +49,20 @@ class UserController extends ResponseController
     public function userInfo(Request $request)
     {
         $bankname_list = Bank::where('status', true)->select('icon', 'bank_name')->get();
-        $bankname_list->map(function ($item){
-            $item['icon'] = url('storage/'.$item['icon']);
+        $bankname_list->map(function ($item) {
+            $item['icon'] = url('storage/' . $item['icon']);
+
             return $item;
         });
 
         return $this->responseSuccess(array_merge([
-            'user_bank_image' => optional($bankname_list->where('bank_name', $request->user()->bank_name)->first())->icon,
-            'bankname_list' => $bankname_list->pluck('bank_name'),
-            'admin_name' => config('name'),
-            'admin_bankname' => config('bankname'),
-            'admin_bankcard' => config('bankcard'),
+            'user_bank_image'     => optional($bankname_list->where('bank_name', $request->user()->bank_name)->first())->icon,
+            'bankname_list'       => $bankname_list->pluck('bank_name'),
+            'admin_name'          => config('name'),
+            'admin_bankname'      => config('bankname'),
+            'admin_bankcard'      => config('bankcard'),
             'admin_operation_fee' => config('operation_fee'),
-            'message' => config('announcement') == 'false' ? '' : config('announcement'),
+            'message'             => config('announcement') == 'false' ? '' : config('announcement'),
         ], $request->user()->toArray()));
     }
 
@@ -71,17 +72,17 @@ class UserController extends ResponseController
      */
     public function myTeam()
     {
-        $user = User::with(['withdraw' => function($query){
+        $user = User::with(['withdraw' => function ($query) {
             $query->where('status', 3)->whereDate('created_at', Carbon::today());
         }])->where([
             'pid' => Auth()->user()->id,
         ])->get();
 
-        $data = $user->map(function ($item){
+        $data = $user->map(function ($item) {
             return [
-                'name' => $item->name,
-                'today_water' => number_format($item->withdraw->sum('withdraw_amount'), 2),
-                'brokerage_fee' => number_format($item->withdraw->sum('brokerage_fee'), 2),
+                'name'                 => $item->name,
+                'today_water'          => number_format($item->withdraw->sum('withdraw_amount'), 2),
+                'brokerage_fee'        => number_format($item->withdraw->sum('brokerage_fee'), 2),
                 'parent_brokerage_fee' => number_format($item->withdraw->sum('parent_brokerage_fee'), 2),
             ];
         });
@@ -99,11 +100,11 @@ class UserController extends ResponseController
     public function updateName(Request $request)
     {
         $data = $request->validate(
-            ['name'     => 'required|min:2|max:4'],
+            ['name' => 'required|min:2|max:4'],
             [
-                'name.required'   => '姓名不能为空',
-                'name.min'   => '姓名最短2个字',
-                'name.max'   => '姓名最长4个字',
+                'name.required' => '姓名不能为空',
+                'name.min'      => '姓名最短2个字',
+                'name.max'      => '姓名最长4个字',
             ]
         );
 
@@ -122,8 +123,8 @@ class UserController extends ResponseController
     public function updatePassword(Request $request)
     {
         $data = $request->validate(
-            ['password'     => 'required|min:6'],
-            ['password.required'   => '密码不能为空','password.min'   => '密码过短']
+            ['password' => 'required|min:6'],
+            ['password.required' => '密码不能为空', 'password.min' => '密码过短']
         );
 
         $user = User::find(Auth()->user()->id);
@@ -141,11 +142,11 @@ class UserController extends ResponseController
     public function updateBankname(Request $request)
     {
         $data = $request->validate(
-            ['bankname'     => 'required'],
-            ['bankname.required'   => '开户行不能为空']
+            ['bankname' => 'required'],
+            ['bankname.required' => '开户行不能为空']
         );
 
-        if($data['bankname'] == '请选择'){
+        if ($data['bankname'] == '请选择') {
             return $this->setStatusCode(422)->responseError('请选择开户行');
         }
 
@@ -164,8 +165,8 @@ class UserController extends ResponseController
     public function updateBankcard(Request $request)
     {
         $data = $request->validate(
-            ['bankcard'     => 'required'],
-            ['bankcard.required'   => '银行卡不能为空']
+            ['bankcard' => 'required'],
+            ['bankcard.required' => '银行卡不能为空']
         );
 
         $user = User::find(Auth()->user()->id);
@@ -184,14 +185,14 @@ class UserController extends ResponseController
     {
         $data = $request->validate(
             [
-                'amount'     => 'required|integer|min:1',
-                'images'     => 'required',
+                'amount' => 'required|integer|min:1',
+                'images' => 'required',
             ],
             [
-                'amount.required'   => '金额不能为空',
-                'amount.integer'   => '金额必须为整数',
-                'amount.min'   => '金额最小为1',
-                'images.required'   => '请上传图片',
+                'amount.required' => '金额不能为空',
+                'amount.integer'  => '金额必须为整数',
+                'amount.min'      => '金额最小为1',
+                'images.required' => '请上传图片',
             ]
         );
 
@@ -199,25 +200,25 @@ class UserController extends ResponseController
             'user_id' => Auth()->user()->id
         ])->get();
 
-        if($deposit->where('status', 1)->sum('amount') > config('deposit')){
+        if ($deposit->where('status', 1)->sum('amount') > config('deposit')) {
             return $this->setStatusCode(422)->responseError(config('deposit_enough_message'));
         }//保证金足够
 
-        if($deposit->where('status', 0)->count()){
+        if ($deposit->where('status', 0)->count()) {
             return $this->setStatusCode(422)->responseError('有待审核的保证金');
         }
 
-        $images = collect($data['images'])->map(function ($item){
-            return preg_replace('/(http.*?storage\/)/i','', $item);
+        $images = collect($data['images'])->map(function ($item) {
+            return preg_replace('/(http.*?storage\/)/i', '', $item);
         })->toJson();
 
         Deposit::create([
-            'user_id' => Auth()->user()->id,
-            'amount' => $data['amount'],
-            'name' => config('name'),
+            'user_id'  => Auth()->user()->id,
+            'amount'   => $data['amount'],
+            'name'     => config('name'),
             'bankname' => config('bankname'),
             'bankcard' => config('bankcard'),
-            'images' => $images,
+            'images'   => $images,
         ]);
 
         return $this->responseSuccess($data, config('deposit_submit_message'));
@@ -239,7 +240,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'withdraw_list' => $withdraw_list,
-            'display_days' => config('display_days')
+            'display_days'  => config('display_days')
         ]);
     }
 
@@ -251,23 +252,23 @@ class UserController extends ResponseController
      */
     public function withdraw(Request $request)
     {
-        if(config('stop') == 'true'){
+        if (config('stop') == 'true') {
             return $this->setStatusCode(422)->responseError(config('stop_message'));
         }
 
-        if(Auth()->user()->status == 0){
+        if (Auth()->user()->status == 0) {
             return $this->setStatusCode(422)->responseError(config('account_freeze_message'));
         }
 
         $data = $request->validate(
             [
-                'withdraw_amount'     => 'required|integer|min:'.config('withdraw_min').'|max:'.config('withdraw_max'),
+                'withdraw_amount' => 'required|integer|min:' . config('withdraw_min') . '|max:' . config('withdraw_max'),
             ],
             [
-                'withdraw_amount.required'   => '金额不能为空',
-                'withdraw_amount.integer'   => '金额必须为整数',
-                'withdraw_amount.min'   => config('withdraw_min_message'),
-                'withdraw_amount.max'   => config('withdraw_max_message'),
+                'withdraw_amount.required' => '金额不能为空',
+                'withdraw_amount.integer'  => '金额必须为整数',
+                'withdraw_amount.min'      => config('withdraw_min_message'),
+                'withdraw_amount.max'      => config('withdraw_max_message'),
             ]
         );
 
@@ -282,29 +283,30 @@ class UserController extends ResponseController
         $withdraw_big_number = bigNumber($data['withdraw_amount']);
         $withdraw_amount = $withdraw_big_number->add($operation_fee);
 
-        if($withdraw_amount > $user_amount){
+        if ($withdraw_amount > $user_amount) {
             return $this->setStatusCode(422)->responseError('金额不足');
         }
 
         $user_big_number = bigNumber($user_amount);
         $amount = $user_big_number->subtract($withdraw_amount)->getValue();
-        $user->amount =$amount;
+        $user->amount = $amount;
         $user_saved = $user->save();
 
         $withdraw_saved = Withdraw::create([
-            'user_id' => $user->id,
-            'order_no' => time().randStr(6),
-            'amount' => $user_amount, //未扣除前余额
+            'user_id'         => $user->id,
+            'order_no'        => time() . randStr(6),
+            'amount'          => $user_amount, //未扣除前余额
             'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
-            'operation_fee' => $operation_fee, //平台运营手续费
-            'brokerage_fee' => $brokerage_fee, //佣金
-            'name' => Auth()->user()->name,
-            'bankname' => Auth()->user()->bank_name,
-            'bankcard' => Auth()->user()->bank_card,
+            'operation_fee'   => $operation_fee, //平台运营手续费
+            'brokerage_fee'   => $brokerage_fee, //佣金
+            'name'            => Auth()->user()->name,
+            'bankname'        => Auth()->user()->bank_name,
+            'bankcard'        => Auth()->user()->bank_card,
         ]);
 
         if (!$user_saved || !$withdraw_saved) {
             DB::rollBack(); //回滚
+
             return $this->setStatusCode(422)->responseError('提现失败');
         }
         DB::commit();   //保存
@@ -321,7 +323,7 @@ class UserController extends ResponseController
     {
         $withdraw = Withdraw::find($id);
 
-        if(!$withdraw || $withdraw->user_id != Auth()->user()->id || $withdraw->status != 2){
+        if (!$withdraw || $withdraw->user_id != Auth()->user()->id || $withdraw->status != 2) {
             return $this->setStatusCode(422)->responseError('确认失败');
         }
 
@@ -333,10 +335,11 @@ class UserController extends ResponseController
         $user_saved = User::where('id', $withdraw->payer_user_id)->increment('amount', $payer_user_add_amount);//给打款方加钱
 
         //给打款方上级加钱
-        if($withdraw->payer_parent_user_id && $withdraw->parent_brokerage_fee != 0){
+        if ($withdraw->payer_parent_user_id && $withdraw->parent_brokerage_fee != 0) {
             $payer_user_saved = User::where('id', $withdraw->payer_parent_user_id)->increment('amount', $withdraw->parent_brokerage_fee);//给打款方的上级加钱
             if (!$payer_user_saved) {
                 DB::rollBack(); //回滚
+
                 return $this->setStatusCode(422)->responseError('确认失败');
             }
         }
@@ -345,15 +348,15 @@ class UserController extends ResponseController
         $withdraw_saved = $withdraw->save();
 
 
-
         $message_saved = Message::create([
             'user_id' => $withdraw->payer_user_id,
-            'title' => '交易确认',
+            'title'   => '交易确认',
             'content' => config('payment_confirmed_message'),
         ]);
 
         if (!$user_saved || !$withdraw_saved || !$message_saved) {
             DB::rollBack(); //回滚
+
             return $this->setStatusCode(422)->responseError('确认失败');
         }
         DB::commit();   //保存
@@ -381,47 +384,47 @@ class UserController extends ResponseController
     {
         $data = $request->validate(
             [
-                'id'     => 'required|integer',
+                'id'      => 'required|integer',
                 'content' => 'required',
             ],
             [
-                'id.required'   => '缺少参数',
-                'id.integer'   => '缺少参数',
-                'content.required'   => '内容不能为空',
+                'id.required'      => '缺少参数',
+                'id.integer'       => '缺少参数',
+                'content.required' => '内容不能为空',
             ]
         );
 
         $withdraw = Withdraw::find($data['id']);
 
-        if(!$withdraw || !in_array($withdraw->status, [1, 2])){
+        if (!$withdraw || !in_array($withdraw->status, [1, 2])) {
             return $this->setStatusCode(422)->responseError('投诉失败');
         }
 
         $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $withdraw->grab_at)->addMinutes(config('grabbed_complaints_minutes'));
-        if(Carbon::now()->lte($grab_time_out_at)){
+        if (Carbon::now()->lte($grab_time_out_at)) {
             return $this->setStatusCode(422)->responseError(config('grabbed_complaints_minutes_message'));
         }
 
 
-        if($withdraw->user_id == Auth()->user()->id){
+        if ($withdraw->user_id == Auth()->user()->id) {
             //投诉提现单子
-            DB::transaction(function () use($withdraw, $data){
+            DB::transaction(function () use ($withdraw, $data) {
                 Complaint::updateOrCreate(
                     ['user_id' => $withdraw->user_id, 'withdraw_id' => $withdraw->id, 'type' => 2],
                     ['content' => $data['content']]
                 );
                 User::whereIn('id', [$withdraw->user_id, $withdraw->payer_user_id])->update(['status' => 0]);
             });
-        }elseif ($withdraw->payer_user_id == Auth()->user()->id){
+        } else if ($withdraw->payer_user_id == Auth()->user()->id) {
             //投诉付款单子
-            DB::transaction(function () use($withdraw, $data){
+            DB::transaction(function () use ($withdraw, $data) {
                 Complaint::updateOrCreate(
                     ['user_id' => $withdraw->payer_user_id, 'withdraw_id' => $withdraw->id, 'type' => 1],
                     ['content' => $data['content']]
                 );
                 User::whereIn('id', [$withdraw->user_id, $withdraw->payer_user_id])->update(['status' => 0]);
             });
-        }else{
+        } else {
             return $this->setStatusCode(422)->responseError('无法投诉');
         }
 
@@ -450,7 +453,7 @@ class UserController extends ResponseController
     {
         $message_list = Message::where('user_id', Auth()->user()->id)->orderBy('created_at', 'DESC')->take(50)->get();
 
-        Message::whereIn('id', $message_list->pluck('id'))->update(['is_read'=>true]);
+        Message::whereIn('id', $message_list->pluck('id'))->update(['is_read' => true]);
 
         return $this->responseSuccess($message_list);
     }
@@ -463,15 +466,15 @@ class UserController extends ResponseController
     {
         $deposit_amount = Deposit::where([
             'user_id' => Auth()->user()->id,
-            'status' => 1,
+            'status'  => 1,
         ])->sum('amount');
 
         return $this->responseSuccess([
-            'deposit_amount' => $deposit_amount,
-            'deposit' => config('deposit'),
+            'deposit_amount'         => $deposit_amount,
+            'deposit'                => config('deposit'),
             'deposit_enough_message' => config('deposit_enough_message'),
-            'withdraw_amount' => Auth()->user()->amount,
-            'index_amount' => $this->todayCanGrabAmount() //可抢金额
+            'withdraw_amount'        => Auth()->user()->amount,
+            'index_amount'           => $this->todayCanGrabAmount() //可抢金额
         ]);
     }
 
@@ -484,35 +487,35 @@ class UserController extends ResponseController
     {
         $grabAmount = $this->todayCanGrabAmount();//可抢金额
 
-        if(config('stop') == 'true'){
+        if (config('stop') == 'true') {
             return $this->setStatusCode(422)->responseError(config('stop_message'));
         }
 
-        if(Auth()->user()->status == 0){
+        if (Auth()->user()->status == 0) {
             return $this->setStatusCode(422)->responseError(config('account_freeze_message'));
         }
 
-        if(10000 >= $grabAmount){
+        if (10000 >= $grabAmount) {
             return $this->setStatusCode(422)->responseError(config('total_amount_shortage_message'));
         }
 
         $deposit_amount = Deposit::where([
             'user_id' => Auth()->user()->id,
-            'status' => 1,
+            'status'  => 1,
         ])->sum('amount');
 
-        if($deposit_amount < config('deposit')){
+        if ($deposit_amount < config('deposit')) {
             return $this->setStatusCode(422)->responseError(config('deposit_shortage_message'));
         }
 
 
         $res = DB::transaction(function () use ($grabAmount) {
-            $count = Withdraw::where('payer_user_id' ,Auth()->user()->id)
-                ->whereIn('status', [1,2])->count();
+            $count = Withdraw::where('payer_user_id', Auth()->user()->id)
+                ->whereIn('status', [1, 2])->count();
 
-            if($count){
+            if ($count) {
                 return [
-                    'status' => false,
+                    'status'  => false,
                     'message' => config('not_completed_message'),//有未完成的单子
                 ];
             }
@@ -523,9 +526,9 @@ class UserController extends ResponseController
                 ->where('status', 0)
                 ->first();
 
-            if($Withdraw){
+            if ($Withdraw) {
                 $Withdraw->payer_user_id = Auth()->user()->id;
-                if(Auth()->user()->pid){
+                if (Auth()->user()->pid) {
                     $Withdraw->payer_parent_user_id = Auth()->user()->pid;
                     $parent_brokerage_fee = round(config('parent_brokerage_fee') / 100 * $Withdraw->withdraw_amount, 2);
                     $Withdraw->parent_brokerage_fee = bigNumber($parent_brokerage_fee)->getValue();
@@ -536,18 +539,18 @@ class UserController extends ResponseController
                 $Withdraw->time_out_at = Carbon::now()->addMinutes(config('auto_cancel'));//订单打款超时时间
 
                 return [
-                    'status' => $Withdraw->save(),
+                    'status'  => $Withdraw->save(),
                     'message' => config('grabbed_message'),//抢单成功
                 ];
             }
 
             return [
-                'status' => false,
+                'status'  => false,
                 'message' => config('no_list_message'),
             ];
         });
 
-        if($res['status']){
+        if ($res['status']) {
             return $this->responseSuccess($res, $res['message']);
         }
 
@@ -563,28 +566,29 @@ class UserController extends ResponseController
 
         $withdraw = Withdraw::where([
             'payer_user_id' => Auth()->user()->id,
-            'status' => 2,
+            'status'        => 2,
         ])->first();
 
-        if($withdraw){
+        if ($withdraw) {
             return $this->setStatusCode(422)->responseError(config('not_completed_message'));
         }
 
         $withdraw = Withdraw::where([
             'payer_user_id' => Auth()->user()->id,
-            'status' => 1,
+            'status'        => 1,
         ])->first();
 
-        if($withdraw && $withdraw->time_out_at){
+        if ($withdraw && $withdraw->time_out_at) {
             $time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $withdraw->time_out_at);
-            if( Carbon::now()->gte($time_out_at)){
+            if (Carbon::now()->gte($time_out_at)) {
                 $diffInSeconds = 0;
                 $withdraw = [];
-            }else{
+            } else {
                 $diffInSeconds = Carbon::now()->diffInSeconds($time_out_at);
             }
+            $withdraw['my_name'] = Auth()->user()->name;
             $withdraw['time_up_seconds'] = $diffInSeconds;
-        }else{
+        } else {
             $withdraw['time_up_seconds'] = 0;
         }
 
@@ -600,39 +604,42 @@ class UserController extends ResponseController
     {
         $data = $request->validate(
             [
-                'id'     => 'required|integer',
-                'images'     => 'required',
+                'id'       => 'required|integer',
+                'remitter' => 'required',
+                'images'   => 'required',
             ],
             [
-                'id.required'   => '缺少参数',
-                'id.integer'   => '缺少参数',
-                'images.required'   => '请上传图片',
+                'id.required'     => '缺少参数',
+                'id.integer'      => '缺少参数',
+                'remitter.required'   => '填写汇款人姓名',
+                'images.required' => '请上传图片',
             ]
         );
 
         $grab = Withdraw::find($data['id']);
 
-        if(!$grab || $grab->payer_user_id != Auth()->user()->id || $grab->status != 1){
+        if (!$grab || $grab->payer_user_id != Auth()->user()->id || $grab->status != 1) {
             return $this->setStatusCode(422)->responseError('订单超时或已被取消');
         }
 
         $time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $grab->time_out_at);
-        if( Carbon::now()->gte($time_out_at) ){
+        if (Carbon::now()->gte($time_out_at)) {
             return $this->setStatusCode(422)->responseError('订单已超时');
         }
 
-        $images = collect($data['images'])->map(function ($item){
-            return preg_replace('/(http.*?storage\/)/i','', $item);
+        $images = collect($data['images'])->map(function ($item) {
+            return preg_replace('/(http.*?storage\/)/i', '', $item);
         })->toJson();
 
         $grab->status = 2;//已付款
         $grab->images = $images;//已付款
         $grab->payment_at = Carbon::now();//确认付款时间
+        $grab->remitter = $data['remitter'];//汇款人姓名
         $grab->save();
 
         Message::create([
             'user_id' => $grab->user_id,
-            'title' => '提现待确认',
+            'title'   => '提现待确认',
             'content' => config('withdra_unconfirmed_message'),
         ]);
 
@@ -656,7 +663,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'transaction_list' => $withdraw_list,
-            'display_days' => config('display_days')
+            'display_days'     => config('display_days')
         ]);
     }
 
@@ -676,13 +683,14 @@ class UserController extends ResponseController
     public function helpList()
     {
         $helps = Help::orderBy('created_at', 'DESC')->get();
-        $helps = $helps->map(function ($item){
+        $helps = $helps->map(function ($item) {
             $item['display'] = false;
+
             return $item;
         });
 
         return $this->responseSuccess([
-            'helps' => $helps,
+            'helps'   => $helps,
             'message' => config('announcement')
         ]);
     }
@@ -694,8 +702,8 @@ class UserController extends ResponseController
     private function todayCanGrabAmount()
     {
         $total_amount = config('total_amount');
-        $today_withdraw_amount = Withdraw::where('payer_user_id' ,Auth()->user()->id)
-            ->whereIn('status', [1,2,3])->whereDate('created_at', Carbon::today())->sum('withdraw_amount');//当日已抢金额
+        $today_withdraw_amount = Withdraw::where('payer_user_id', Auth()->user()->id)
+            ->whereIn('status', [1, 2, 3])->whereDate('created_at', Carbon::today())->sum('withdraw_amount');//当日已抢金额
 
         return bigNumber($total_amount)->subtract($today_withdraw_amount)->getValue();
     }
@@ -705,27 +713,27 @@ class UserController extends ResponseController
         $user = User::with('deposit')->find(Auth()->user()->id);
 
         $deposit = $user->deposit->sum('amount');
-        if($deposit <= 0){
+        if ($deposit <= 0) {
             return $this->setStatusCode(422)->responseError('未缴纳保证金');
         }
 
-        if($user->status == 0 || $user->status == 2){ //账户已冻结 已注销
+        if ($user->status == 0 || $user->status == 2) { //账户已冻结 已注销
             return $this->setStatusCode(422)->responseError('账户已冻结');
         }
 
         $count = Withdraw::where('user_id', Auth()->user()->id)
-            ->whereIn('status', [0,1,2])
+            ->whereIn('status', [0, 1, 2])
             ->count();
 
-        if($count){ //未完成的提现申请
+        if ($count) { //未完成的提现申请
             return $this->setStatusCode(422)->responseError('有提现正在进行中');
         }
 
         $count2 = Withdraw::where('payer_user_id', Auth()->user()->id)
-            ->whereIn('status', [0,1,2])
+            ->whereIn('status', [0, 1, 2])
             ->count();
 
-        if($count2){ //未完成的交易单
+        if ($count2) { //未完成的交易单
             return $this->setStatusCode(422)->responseError('有交易正在进行中');
         }
 
@@ -733,31 +741,31 @@ class UserController extends ResponseController
             ->where('status', 3)
             ->sum('withdraw_amount');
 
-        if($finished_amount >= config('deposit_free_amount')){
+        if ($finished_amount >= config('deposit_free_amount')) {
             $fee = 0;
-        }else{
+        } else {
             $fee = round(config('deposit_fee') / 100 * $finished_amount, 2);
             $deposit = bigNumber($deposit)->subtract($fee)->getValue();
         }
 
-        if($deposit <= 0){
+        if ($deposit <= 0) {
             return $this->setStatusCode(422)->responseError('可提现金额不足');
         }
 
-        DB::transaction(function () use($user, $deposit, $fee){
+        DB::transaction(function () use ($user, $deposit, $fee) {
             DepositWithdraw::create([
-                'user_id' => $user->id,
+                'user_id'         => $user->id,
                 'withdraw_amount' => $deposit,
-                'operation_fee' => $fee,
-                'name' => $user->name,
-                'bankname' => $user->bank_name,
-                'bankcard' => $user->bank_card,
+                'operation_fee'   => $fee,
+                'name'            => $user->name,
+                'bankname'        => $user->bank_name,
+                'bankcard'        => $user->bank_card,
             ]);
 
             Deposit::where([
                 'user_id' => $user->id,
-                'status' => 1,
-            ])->update(['status'=> 2]);
+                'status'  => 1,
+            ])->update(['status' => 2]);
 
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
 
@@ -772,27 +780,27 @@ class UserController extends ResponseController
     {
         $user = User::with('deposit')->find(Auth()->user()->id);
         $deposit = $user->deposit->sum('amount');
-        if($deposit <= 0){
+        if ($deposit <= 0) {
             return $this->setStatusCode(422)->responseError('未缴纳保证金');
         }
 
-        if($user->status == 0 || $user->status == 2){ //账户已冻结 已注销
+        if ($user->status == 0 || $user->status == 2) { //账户已冻结 已注销
             return $this->setStatusCode(422)->responseError('账户已冻结');
         }
 
         $count = Withdraw::where('user_id', Auth()->user()->id)
-            ->whereIn('status', [0,1,2])
+            ->whereIn('status', [0, 1, 2])
             ->count();
 
-        if($count){ //未完成的提现申请
+        if ($count) { //未完成的提现申请
             return $this->setStatusCode(422)->responseError('有提现正在进行中');
         }
 
         $count2 = Withdraw::where('payer_user_id', Auth()->user()->id)
-            ->whereIn('status', [0,1,2])
+            ->whereIn('status', [0, 1, 2])
             ->count();
 
-        if($count2){ //未完成的交易单
+        if ($count2) { //未完成的交易单
             return $this->setStatusCode(422)->responseError('有交易正在进行中');
         }
 
@@ -800,24 +808,24 @@ class UserController extends ResponseController
             ->where('status', 3)
             ->sum('withdraw_amount');
 
-        if($finished_amount >= config('deposit_free_amount')){
+        if ($finished_amount >= config('deposit_free_amount')) {
             $fee = 0;
-        }else{
+        } else {
             $fee = round(config('deposit_fee') / 100 * $deposit, 2);
             $deposit = bigNumber($deposit)->subtract($fee)->getValue();
         }
 
-        if($deposit <= 0){
+        if ($deposit <= 0) {
             return $this->setStatusCode(422)->responseError('可提现金额不足');
         }
 
         return $this->responseSuccess([
-            'bank_card' => $user->bank_card,
-            'bank_name' => $user->bank_name,
-            'deposit' => $deposit,
+            'bank_card'       => $user->bank_card,
+            'bank_name'       => $user->bank_name,
+            'deposit'         => $deposit,
             'finished_amount' => $finished_amount,
-            'fee' => $fee,
-            'text' => explode(';', config('deposit_back_page_message'))
+            'fee'             => $fee,
+            'text'            => explode(';', config('deposit_back_page_message'))
         ]);
     }
 }

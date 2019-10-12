@@ -25,6 +25,7 @@ class CreateWithdrawsTable extends Migration
             $table->decimal('brokerage_fee', 20 , 2)->comment('佣金');
             $table->decimal('parent_brokerage_fee', 20 , 2)->default(0)->comment('上级佣金');
             $table->string('name')->comment('收款人');
+            $table->string('remitter')->nullable()->comment('汇款人');
             $table->string('bankname')->comment('开户银行');
             $table->string('bankcard')->comment('银行卡号');
             $table->text('images')->nullable()->comment('图片');

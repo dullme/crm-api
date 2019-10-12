@@ -26,6 +26,7 @@ class User extends Authenticatable
         'bank_name',
         'bank_card',
         'password',
+        'remark',
     ];
 
     public function findForPassport($username) {

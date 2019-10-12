@@ -74,6 +74,8 @@ class UserController extends AdminController
             return $label;
         });
 
+        $grid->column('remark', __('备注'))->editable();
+
         //操作栏
         $grid->actions(function ($actions){
             $actions->disableView();
@@ -137,6 +139,7 @@ class UserController extends AdminController
         $form->text('invitation_code', __('邀请码'));
         $form->text('bank_name', __('开户行'));
         $form->text('bank_card', __('银行卡号'));
+        $form->text('remark', __('备注'));
         $form->password('password', __('密码'))->required()->rules('required')->default(function ($form){
             return $form->model()->password;
         });

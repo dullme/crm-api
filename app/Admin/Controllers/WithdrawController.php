@@ -29,7 +29,16 @@ class WithdrawController extends AdminController
         //筛选框
         $grid->expandFilter();
         $grid->filter(function ($filter){
+            $filter->equal('payer.name', '出款人');
+            $filter->equal('name', '入款人');
             $filter->equal('order_no', '订单号');
+            $filter->equal('status', '状态')->select([
+                '0' => '待抢单',
+                '1' => '已接单',
+                '2' => '已出款',
+                '3' => '已完成',
+                '4' => '已取消',
+            ]);
         });
 
         $grid->disableActions();
@@ -53,6 +62,7 @@ class WithdrawController extends AdminController
         $grid->column('出款人')->display(function (){
             return optional($this->payer)->name;
         });
+        $grid->column('remitter', __('汇款人'));
         $grid->column('bankcard', __('入款银行卡号'));
         $grid->column('bankname', __('入款归属行'));
         $grid->column('name', __('入款人'));

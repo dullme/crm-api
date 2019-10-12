@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('invitation_code')->unique()->comment('邀请码');
             $table->string('bank_name')->nullable()->comment('银行名称');
             $table->string('bank_card')->nullable()->comment('银行卡号');
+            $table->string('remark')->nullable()->comment('备注');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
