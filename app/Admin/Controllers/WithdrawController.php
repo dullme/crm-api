@@ -32,9 +32,13 @@ class WithdrawController extends AdminController
             $filter->equal('order_no', '订单号');
         });
 
+        $grid->disableActions();
+
         //操作栏
         $grid->actions(function ($actions){
             $actions->disableView();
+            $actions->disableDelete();
+            $actions->disableEdit();
         });
 
         $grid->column('id', __('Id'));
@@ -55,12 +59,30 @@ class WithdrawController extends AdminController
         $grid->column('images', __('凭证'))->display(function ($picture){
             return json_decode($picture);
         })->gallery(['width' => 100, 'height' => 100]);
-        $grid->column('status', __('状态'))->editable('select',[0 => '待抢单',1 => '已接单', 2 => '已出款', 3 => '已完成']);
+//        $grid->column('status', __('状态'))->editable('select',[0 => '待抢单',1 => '已接单', 2 => '已出款', 3 => '已完成']);
+        $grid->column('status', __('状态'))->display(function ($status){
+            if ($status == 0){
+                $label = "<a class='label label-danger'>待抢单</a>";
+            }elseif($status == 1){
+                $label = "<a class='label label-info'>已接单</a>";
+            }elseif($status == 2){
+                $label = "<a class='label label-info'>已出款</a>";
+            }elseif($status == 3){
+                $label = "<a class='label label-success'>已完成</a>";
+            }elseif($status == 4){
+                $label = "<a class='label label-warning'>已取消</a>";
+            }else{
+                $label = "<a class='label label-default'>未知</a>";
+            }
+
+            return $label;
+        });
 
         $grid->column('created_at', __('提款发起时间'));
         $grid->column('grab_at', __('抢单时间'));
         $grid->column('payment_at', __('确认转账时间'));
         $grid->disableExport();
+        $grid->disableCreateButton();
         return $grid;
     }
 

@@ -41,7 +41,7 @@ class DepositController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('会员账号')->display(function (){
-            return $this->user->username;
+            return optional($this->user)->username;
         });
         $grid->column('amount', __('缴纳金额(元)'))->display(function ($amount){
             return bigNumber($amount)->getValue();
@@ -65,6 +65,7 @@ class DepositController extends AdminController
         });
         $grid->column('created_at', __('汇款时间'));
         $grid->disableExport();
+        $grid->disableCreateButton();
         return $grid;
     }
 

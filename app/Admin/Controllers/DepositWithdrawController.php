@@ -28,7 +28,7 @@ class DepositWithdrawController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('会员账号')->display(function (){
-            return $this->user->username;
+            return optional($this->user)->username;
         });
         $grid->column('withdraw_amount', __('提现金额'));
         $grid->column('operation_fee', __('手续费'));

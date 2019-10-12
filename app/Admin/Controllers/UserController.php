@@ -111,6 +111,11 @@ class UserController extends AdminController
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
+        $show->panel()->tools(function ($tools){
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
+
         return $show;
     }
 
@@ -140,6 +145,11 @@ class UserController extends AdminController
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = bcrypt($form->password);
             }
+        });
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
         });
         return $form;
     }

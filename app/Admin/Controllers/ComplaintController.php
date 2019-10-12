@@ -39,14 +39,14 @@ class ComplaintController extends AdminController
         $grid->model()->orderBy('created_at', 'DESC');
         $grid->column('id', __('Id'));
         $grid->column('userInfo', __('投诉方(账号/姓名)'))->display(function (){
-            return $this->user->username.' / '.$this->user->name;
+            return optional($this->user)->username.' / '.optional($this->user)->name;
         });
 
         $grid->column('other', __('被投诉方(账号/姓名)'))->display(function (){
             if($this->type == 1){
-                return $this->withdraw->user->username.' / '.$this->withdraw->user->name;
+                return optional($this->withdraw->user)->username.' / '.optional($this->withdraw->user)->name;
             }
-            return $this->withdraw->payer->username.' / '.$this->withdraw->payer->name;
+            return optional($this->withdraw->payer)->username.' / '.optional($this->withdraw->payer)->name;
         });
         $grid->column('withdraw.order_no', __('单号'));
         $grid->column('withdraw.withdraw_amount', __('提现金额'));
@@ -123,6 +123,11 @@ class ComplaintController extends AdminController
             if($form->model()->status == 0){
                 $form->model()->status = 1;
             }
+        });
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
         });
 
         return $form;

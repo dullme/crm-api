@@ -99,8 +99,12 @@ class UserController extends ResponseController
     public function updateName(Request $request)
     {
         $data = $request->validate(
-            ['name'     => 'required'],
-            ['name.required'   => '姓名不能为空']
+            ['name'     => 'required|min:2|max:4'],
+            [
+                'name.required'   => '姓名不能为空',
+                'name.min'   => '姓名最短2个字',
+                'name.max'   => '姓名最长4个字',
+            ]
         );
 
         $user = User::find(Auth()->user()->id);
@@ -611,6 +615,10 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('订单已超时');
         }
 
+        $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $grab->grab_at)->addMinutes(config('grabbed_complaints_minutes'));
+        if(Carbon::now()->lte($grab_time_out_at)){
+            return $this->setStatusCode(422)->responseError(config('grabbed_complaints_minutes_message'));
+        }
 
         $images = collect($data['images'])->map(function ($item){
             return preg_replace('/(http.*?storage\/)/i','', $item);
@@ -794,7 +802,7 @@ class UserController extends ResponseController
         if($finished_amount >= config('deposit_free_amount')){
             $fee = 0;
         }else{
-            $fee = round(config('deposit_fee') / 100 * $finished_amount, 2);
+            $fee = round(config('deposit_fee') / 100 * $deposit, 2);
             $deposit = bigNumber($deposit)->subtract($fee)->getValue();
         }
 
@@ -808,7 +816,7 @@ class UserController extends ResponseController
             'deposit' => $deposit,
             'finished_amount' => $finished_amount,
             'fee' => $fee,
-            'text' => config('deposit_back_page_message')
+            'text' => explode(';', config('deposit_back_page_message'))
         ]);
     }
 }
