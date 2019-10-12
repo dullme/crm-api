@@ -397,6 +397,12 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('投诉失败');
         }
 
+        $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $withdraw->grab_at)->addMinutes(config('grabbed_complaints_minutes'));
+        if(Carbon::now()->lte($grab_time_out_at)){
+            return $this->setStatusCode(422)->responseError(config('grabbed_complaints_minutes_message'));
+        }
+
+
         if($withdraw->user_id == Auth()->user()->id){
             //投诉提现单子
             DB::transaction(function () use($withdraw, $data){
@@ -613,11 +619,6 @@ class UserController extends ResponseController
         $time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $grab->time_out_at);
         if( Carbon::now()->gte($time_out_at) ){
             return $this->setStatusCode(422)->responseError('订单已超时');
-        }
-
-        $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $grab->grab_at)->addMinutes(config('grabbed_complaints_minutes'));
-        if(Carbon::now()->lte($grab_time_out_at)){
-            return $this->setStatusCode(422)->responseError(config('grabbed_complaints_minutes_message'));
         }
 
         $images = collect($data['images'])->map(function ($item){
