@@ -18,4 +18,5 @@ Route::group([
     $router->resource('helps', HelpController::class);
     $router->resource('messages', MessageController::class);
     $router->resource('complaints', ComplaintController::class);
+    $router->resource('deposit-withdraws', DepositWithdrawController::class);
 });

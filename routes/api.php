@@ -43,4 +43,6 @@ Route::group(['middleware' => 'auth:api'], function (){
     Route::get('complaint-message', 'UserController@getComplaintMessage'); //获取投诉提示语
     Route::get('my-team', 'UserController@myTeam'); //我的团队
     Route::get('help-list', 'UserController@helpList'); //我的帮助
+    Route::get('deposit-withdraw', 'UserController@depositWithdraw'); //保证金提现
+    Route::post('save-deposit-withdraw', 'UserController@saveDepositWithdraw'); //确定保证金提现
 });

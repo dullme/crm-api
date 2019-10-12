@@ -52,7 +52,17 @@ class DepositController extends AdminController
         $grid->column('images', __('汇款回执单'))->display(function ($picture){
             return json_decode($picture);
         })->gallery(['width' => 100, 'height' => 100]);;
-        $grid->column('status', __('状态'))->using([0 => '待审核', 1 => '已审核']);
+        $grid->column('status', __('状态'))->display(function ($status){
+            if ($status == 0){
+                $label = "<a class='label label-danger'>待审核</a>";
+            }elseif($status == 1){
+                $label = "<a class='label label-success'>已审核</a>";
+            }else{
+                $label = "<a class='label label-default'>已注销</a>";
+            }
+
+            return $label;
+        });
         $grid->column('created_at', __('汇款时间'));
         $grid->disableExport();
         return $grid;

@@ -55,6 +55,9 @@ class LoginController extends ResponseController {
             return $this->setStatusCode(422)->responseError('用户名或密码错误');
         }
 
+        if($user->status == 2){
+            return $this->setStatusCode(422)->responseError('该账户已注销');
+        }
 
         $response = $this->getBearerTokenByUser($user, 2);
         $token = json_decode((string) $response->getBody(), true);

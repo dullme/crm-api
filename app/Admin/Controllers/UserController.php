@@ -65,8 +65,10 @@ class UserController extends AdminController
         $grid->column('status', __('状态'))->display(function ($status){
             if ($status == 0){
                 $label = "<a class='label label-danger'>冻结</a>";
-            }else{
+            }elseif($status == 1){
                 $label = "<a class='label label-success'>正常</a>";
+            }else{
+                $label = "<a class='label label-default'>注销</a>";
             }
 
             return $label;
@@ -76,6 +78,9 @@ class UserController extends AdminController
         $grid->actions(function ($actions){
             $actions->disableView();
             $actions->disableDelete();
+            if($this->row->status == 2){
+                $actions->disableEdit();
+            }
         });
         $grid->disableExport();
         return $grid;
