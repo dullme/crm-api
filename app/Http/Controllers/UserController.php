@@ -828,4 +828,20 @@ class UserController extends ResponseController
             'text'            => explode(';', config('deposit_back_page_message'))
         ]);
     }
+
+    public function versionInfo()
+    {
+        return $this->responseSuccess([
+            "info" => [
+                'id' => "1004",
+                'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
+                'iosLink' => url('finished.apk'),
+                'androidLink' => url('finished.apk'),
+                'name' => "CRM",
+                'number' => "1.0.4",
+                'packgeSize' => "209270",
+                'type' => "release",
+            ]
+        ]);
+    }
 }
