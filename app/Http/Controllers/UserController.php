@@ -843,12 +843,12 @@ class UserController extends ResponseController
     {
         return $this->responseSuccess([
             "info" => [
-                'id' => "1007",
+                'id' => "1008",
                 'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
-                'iosLink' => url('1.0.7.wgt'),
-                'androidLink' => url('1.0.7.wgt'),
+                'iosLink' => url('1.0.8.wgt'),
+                'androidLink' => url('1.0.8.wgt'),
                 'name' => "CRM",
-                'number' => "1.0.7",
+                'number' => "1.0.8",
                 'packgeSize' => "209270",
                 'type' => "release",
             ]
