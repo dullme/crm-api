@@ -829,11 +829,21 @@ class UserController extends ResponseController
         ]);
     }
 
+    public function versionId()
+    {
+        return $this->responseSuccess([
+            'latest' => [
+                'id' => "1006",
+                'method' => "force",
+            ]
+        ]);
+    }
+
     public function versionInfo()
     {
         return $this->responseSuccess([
             "info" => [
-                'id' => "1004",
+                'id' => "1006",
                 'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
                 'iosLink' => url('1.0.6.wgt'),
                 'androidLink' => url('1.0.6.wgt'),
