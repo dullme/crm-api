@@ -865,7 +865,7 @@ class UserController extends ResponseController
     {
         return $this->responseSuccess([
             'latest' => [
-                'id' => "2002",
+                'id' => "2003",
                 'method' => "force",
             ]
         ]);
@@ -875,12 +875,12 @@ class UserController extends ResponseController
     {
         return $this->responseSuccess([
             "info" => [
-                'id' => "2002",
+                'id' => "2003",
                 'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
-                'iosLink' => url('2.0.2.wgt'),
-                'androidLink' => url('2.0.2.wgt'),
+                'iosLink' => url('2.0.3.wgt'),
+                'androidLink' => url('2.0.3.wgt'),
                 'name' => "CRM",
-                'number' => "2.0.2",
+                'number' => "2.0.3",
                 'packgeSize' => "129270",
                 'type' => "release",
             ]
