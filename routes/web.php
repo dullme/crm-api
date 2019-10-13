@@ -11,21 +11,7 @@
 |
 */
 
-use App\Customer;
-use GuzzleHttp\Client;
-
-
 Route::get('/', function () {
-
-    $client = new Client();
-
-    try {
-        $response = $client->get('http://54.169.181.103:1188/newuser?userid=100000');
-        $usdt_address = $response->getBody()->getContents();
-        dd($usdt_address);
-    } catch (Exception $e) {
-
-    }
     return view('welcome');
 });
 

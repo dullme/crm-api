@@ -128,7 +128,7 @@ class UserAmountController extends AdminController
                 $after_amount = $amount->subtract($form->amount)->getValue();
             }
 
-            if($after_amount <= 0){
+            if($after_amount < 0){
                 return back()->with(admin_toastr('用户金额不足', 'error'));
             }else{
                 $user->amount = $after_amount;
