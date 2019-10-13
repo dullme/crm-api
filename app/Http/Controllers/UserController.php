@@ -256,6 +256,7 @@ class UserController extends ResponseController
             ->get();
 
         $withdraw_list = $withdraw_list->map(function ($item){
+            $item['remitter'] = is_null($item['remitter']) ? null : '*'.mb_substr($item['remitter'], 1, 3);
             $item['complaint'] = $item->complaints->count();
             unset($item['complaints']);
             return $item;
