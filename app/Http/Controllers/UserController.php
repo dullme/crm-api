@@ -835,10 +835,10 @@ class UserController extends ResponseController
             "info" => [
                 'id' => "1004",
                 'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
-                'iosLink' => url('finished.apk'),
-                'androidLink' => url('finished.apk'),
+                'iosLink' => url('1.0.6.wgt'),
+                'androidLink' => url('1.0.6.wgt'),
                 'name' => "CRM",
-                'number' => "1.0.4",
+                'number' => "1.0.6",
                 'packgeSize' => "209270",
                 'type' => "release",
             ]
