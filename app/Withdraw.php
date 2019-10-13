@@ -37,4 +37,9 @@ class Withdraw extends Model
     {
         return $this->belongsTo(User::class, 'payer_user_id', 'id');
     }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class);
+    }
 }

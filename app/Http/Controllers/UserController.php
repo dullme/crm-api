@@ -72,13 +72,25 @@ class UserController extends ResponseController
      */
     public function myTeam()
     {
+        $mine = User::with(['withdraw' => function ($query) {
+            $query->where('status', 3)->whereDate('created_at', Carbon::today());
+        }])->find(Auth()->user()->id);
+
+        $mine = [
+            'name'                 => $mine->name,
+            'today_water'          => number_format($mine->withdraw->sum('withdraw_amount'), 2),
+            'brokerage_fee'        => number_format($mine->withdraw->sum('brokerage_fee'), 2),
+            'parent_brokerage_fee' => number_format($mine->withdraw->sum('parent_brokerage_fee'), 2),
+        ];
+
+
         $user = User::with(['withdraw' => function ($query) {
             $query->where('status', 3)->whereDate('created_at', Carbon::today());
         }])->where([
             'pid' => Auth()->user()->id,
         ])->get();
 
-        $data = $user->map(function ($item) {
+        $others = $user->map(function ($item) {
             return [
                 'name'                 => $item->name,
                 'today_water'          => number_format($item->withdraw->sum('withdraw_amount'), 2),
@@ -87,9 +99,12 @@ class UserController extends ResponseController
             ];
         });
 
-        $data->sortByDesc('today_water');
+        $others->sortByDesc('today_water');
 
-        return $this->responseSuccess($data);
+        return $this->responseSuccess([
+            'mine' => $mine,
+            'others' => $others,
+        ]);
     }
 
     /**
@@ -233,10 +248,18 @@ class UserController extends ResponseController
         $end_at = Carbon::now();
         $start_at = Carbon::now()->subDays(config('display_days'));
 
-        $withdraw_list = Withdraw::where('user_id', Auth()->user()->id)
+        $withdraw_list = Withdraw::with(['complaints' => function($query){
+            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0,1]);
+        }])->where('user_id', Auth()->user()->id)
             ->whereBetween('created_at', [$start_at, $end_at])
             ->orderBy('created_at', 'DESC')
             ->get();
+
+        $withdraw_list = $withdraw_list->map(function ($item){
+            $item['complaint'] = $item->complaints->count();
+            unset($item['complaints']);
+            return $item;
+        });
 
         return $this->responseSuccess([
             'withdraw_list' => $withdraw_list,
@@ -655,11 +678,19 @@ class UserController extends ResponseController
         $end_at = Carbon::now();
         $start_at = Carbon::now()->subDays(config('display_days'));
 
-        $withdraw_list = Withdraw::where('payer_user_id', Auth()->user()->id)
+        $withdraw_list = Withdraw::with(['complaints' => function($query){
+            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0,1]);
+        }])->where('payer_user_id', Auth()->user()->id)
             ->whereIn('status', [2, 3, 4])
             ->whereBetween('created_at', [$start_at, $end_at])
             ->orderBy('created_at', 'DESC')
             ->get();
+
+        $withdraw_list = $withdraw_list->map(function ($item){
+            $item['complaint'] = $item->complaints->count();
+            unset($item['complaints']);
+            return $item;
+        });
 
         return $this->responseSuccess([
             'transaction_list' => $withdraw_list,
