@@ -228,7 +228,11 @@ class UserController extends ResponseController
 
         $images = collect($data['images'])->map(function ($item) {
             return preg_replace('/(http.*?storage\/)/i', '', $item);
-        })->toJson();
+        });
+
+        if($images->count() <= 0){
+            return $this->setStatusCode(422)->responseError('图片上传失败');
+        }
 
         Deposit::create([
             'user_id'  => Auth()->user()->id,
@@ -237,7 +241,7 @@ class UserController extends ResponseController
             'name'     => config('name'),
             'bankname' => config('bankname'),
             'bankcard' => config('bankcard'),
-            'images'   => $images,
+            'images'   => $images->toJson(),
         ]);
 
         return $this->responseSuccess($data, config('deposit_submit_message'));
