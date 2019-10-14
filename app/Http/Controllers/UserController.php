@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\DocBlock\Tags\Version;
 use Webpatser\Uuid\Uuid;
 
 class UserController extends ResponseController
@@ -863,26 +864,30 @@ class UserController extends ResponseController
 
     public function versionId()
     {
+        $version = Version::orderBy('created_at', 'DESC')->first();
+
         return $this->responseSuccess([
             'latest' => [
-                'id' => "2003",
-                'method' => "force",
+                'id' => $version->id,
+                'method' => $version->method,
             ]
         ]);
     }
 
     public function versionInfo()
     {
+        $version = Version::orderBy('created_at', 'DESC')->first();
+
         return $this->responseSuccess([
             "info" => [
-                'id' => "2003",
-                'info' => "1.此版本用于测试自动更新↵2.请求数据来自Easy Mock↵3.请更换成自己的api地址",
-                'iosLink' => url('2.0.3.wgt'),
-                'androidLink' => url('2.0.3.wgt'),
-                'name' => "CRM",
-                'number' => "2.0.3",
-                'packgeSize' => "129270",
-                'type' => "release",
+                'id' => $version->id,
+                'info' => $version->info,
+                'iosLink' => $version->ios_link ?? $version->android_link,
+                'androidLink' => $version->android_link,
+                'name' => $version->name,
+                'number' => $version->number,
+                'packgeSize' => $version->packge_size,
+                'type' => $version->type,
             ]
         ]);
     }

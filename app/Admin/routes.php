@@ -20,4 +20,5 @@ Route::group([
     $router->resource('complaints', ComplaintController::class);
     $router->resource('deposit-withdraws', DepositWithdrawController::class);
     $router->resource('user-amounts', UserAmountController::class);
+    $router->resource('versions', VersionController::class);
 });
