@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class UserController extends AdminController
 {
@@ -31,7 +32,7 @@ class UserController extends AdminController
         $grid->filter(function ($filter){
             $filter->like('username', '会员账号');
             $filter->like('name', '会员姓名');
-            $filter->equal('upLevel.invitation_code', '上级推广码');
+            $filter->equal('upLevel.invitation_code', '推广码');
         });
 
         $grid->column('id', __('Id'));
@@ -45,7 +46,7 @@ class UserController extends AdminController
 
         });
 
-        $grid->column('upLevel.invitation_code','上级推广编码')->copyable();
+        $grid->column('invitation_code','推广编码')->copyable();
 
         $grid->column('created_at', __('注册时间'));
 
@@ -58,8 +59,16 @@ class UserController extends AdminController
             return bigNumber(optional($this->totalAmount)->sum('withdraw_amount'))->getValue();
         })->sortable();
 
-        $grid->column('下级用户(人)')->display(function (){
+        $grid->column('下级用户数')->display(function (){
             return optional($this->downLevel)->count();
+        });
+
+        $grid->column('下级用户')->expand(function($param){
+            $contact = $this->downLevel->map(function ($val){
+                return $val->only(['id','username','name']);
+            });
+
+            return new Table(['ID','会员账号','会员姓名'],$contact->toArray());
         });
 
         $grid->column('status', __('状态'))->display(function ($status){
