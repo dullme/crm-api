@@ -233,6 +233,7 @@ class UserController extends ResponseController
         Deposit::create([
             'user_id'  => Auth()->user()->id,
             'amount'   => $data['amount'],
+            'remitter' => $data['remitter'],
             'name'     => config('name'),
             'bankname' => config('bankname'),
             'bankcard' => config('bankcard'),
