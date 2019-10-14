@@ -14,6 +14,7 @@
         "fideloper/proxy": "^4.0",
         "laravel-admin-ext/config": "^1.0",
         "laravel-admin-ext/grid-lightbox": "^1.0",
+        "laravel-admin-ext/media-manager": "^1.0",
         "laravel/framework": "5.8.*",
         "laravel/passport": "^7.3",
         "laravel/tinker": "^1.0",
