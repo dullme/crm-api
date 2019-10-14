@@ -886,7 +886,7 @@ class UserController extends ResponseController
                 'androidLink' => $version->android_link,
                 'name' => $version->name,
                 'number' => $version->number,
-                'packgeSize' => intval($version->packge_size * 100000),
+                'packgeSize' => intval($version->packge_size * 1000),
                 'type' => $version->type,
             ]
         ]);
