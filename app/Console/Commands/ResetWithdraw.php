@@ -39,7 +39,7 @@ class ResetWithdraw extends Command
      */
     public function handle()
     {
-        return Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now()->addSeconds(10))->update([
+        return Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now())->update([
             'payer_user_id' => NULL,
             'payer_parent_user_id' => NULL,
             'parent_brokerage_fee' => 0,
