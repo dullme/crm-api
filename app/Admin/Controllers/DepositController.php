@@ -49,6 +49,7 @@ class DepositController extends AdminController
         $grid->column('name', __('收款人'));
         $grid->column('bankname', __('汇款归属行'));
         $grid->column('bankcard', __('汇款银行卡号'));
+        $grid->column('remitter', __('汇款人'));
         $grid->column('images', __('汇款回执单'))->display(function ($picture){
             return json_decode($picture);
         })->gallery(['width' => 100, 'height' => 100]);;

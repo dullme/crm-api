@@ -74,7 +74,7 @@ class UserController extends ResponseController
     public function myTeam()
     {
         $mine = User::with(['withdraw' => function ($query) {
-            $query->where('status', 3)->whereDate('payment_at', Carbon::today());
+            $query->where('status', 3)->whereDate('finished_at', Carbon::today());
         }])->find(Auth()->user()->id);
 
         $mine = [
@@ -86,7 +86,7 @@ class UserController extends ResponseController
 
 
         $user = User::with(['withdraw' => function ($query) {
-            $query->where('status', 3)->whereDate('payment_at', Carbon::today());
+            $query->where('status', 3)->whereDate('finished_at', Carbon::today());
         }])->where([
             'pid' => Auth()->user()->id,
         ])->get();
@@ -103,7 +103,7 @@ class UserController extends ResponseController
         $others->sortByDesc('today_water');
 
         return $this->responseSuccess([
-            'mine' => $mine,
+            'mine'   => $mine,
             'others' => $others,
         ]);
     }
@@ -201,14 +201,16 @@ class UserController extends ResponseController
     {
         $data = $request->validate(
             [
-                'amount' => 'required|integer|min:1',
-                'images' => 'required',
+                'amount'   => 'required|integer|min:1',
+                'remitter' => 'required',
+                'images'   => 'required',
             ],
             [
-                'amount.required' => '金额不能为空',
-                'amount.integer'  => '金额必须为整数',
-                'amount.min'      => '金额最小为1',
-                'images.required' => '请上传图片',
+                'amount.required'   => '金额不能为空',
+                'amount.integer'    => '金额必须为整数',
+                'amount.min'        => '金额最小为1',
+                'remitter.required' => '汇款人不能为空',
+                'images.required'   => '请上传图片',
             ]
         );
 
@@ -249,17 +251,18 @@ class UserController extends ResponseController
         $end_at = Carbon::now();
         $start_at = Carbon::now()->subDays(config('display_days'));
 
-        $withdraw_list = Withdraw::with(['complaints' => function($query){
-            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0,1]);
+        $withdraw_list = Withdraw::with(['complaints' => function ($query) {
+            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
         }])->where('user_id', Auth()->user()->id)
             ->whereBetween('created_at', [$start_at, $end_at])
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('payment_at', 'DESC')
             ->get();
 
-        $withdraw_list = $withdraw_list->map(function ($item){
-            $item['remitter'] = is_null($item['remitter']) ? null : '*'.mb_substr($item['remitter'], 1, 3);
+        $withdraw_list = $withdraw_list->map(function ($item) {
+            $item['remitter'] = is_null($item['remitter']) ? null : '*' . mb_substr($item['remitter'], 1, 3);
             $item['complaint'] = $item->complaints->count();
             unset($item['complaints']);
+
             return $item;
         });
 
@@ -422,7 +425,7 @@ class UserController extends ResponseController
 
         $withdraw = Withdraw::find($data['id']);
 
-        if (!$withdraw || !in_array($withdraw->status, [1, 2])) {
+        if (!$withdraw || !in_array($withdraw->status, [2])) {
             return $this->setStatusCode(422)->responseError('投诉失败');
         }
 
@@ -635,10 +638,10 @@ class UserController extends ResponseController
                 'images'   => 'required',
             ],
             [
-                'id.required'     => '缺少参数',
-                'id.integer'      => '缺少参数',
-                'remitter.required'   => '填写汇款人姓名',
-                'images.required' => '请上传图片',
+                'id.required'       => '缺少参数',
+                'id.integer'        => '缺少参数',
+                'remitter.required' => '填写汇款人姓名',
+                'images.required'   => '请上传图片',
             ]
         );
 
@@ -681,17 +684,18 @@ class UserController extends ResponseController
         $end_at = Carbon::now();
         $start_at = Carbon::now()->subDays(config('display_days'));
 
-        $withdraw_list = Withdraw::with(['complaints' => function($query){
-            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0,1]);
+        $withdraw_list = Withdraw::with(['complaints' => function ($query) {
+            $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
         }])->where('payer_user_id', Auth()->user()->id)
             ->whereIn('status', [2, 3, 4])
             ->whereBetween('created_at', [$start_at, $end_at])
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('payment_at', 'DESC')
             ->get();
 
-        $withdraw_list = $withdraw_list->map(function ($item){
+        $withdraw_list = $withdraw_list->map(function ($item) {
             $item['complaint'] = $item->complaints->count();
             unset($item['complaints']);
+
             return $item;
         });
 
@@ -869,7 +873,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'latest' => [
-                'id' => $version->id,
+                'id'     => $version->id,
                 'method' => $version->method,
             ]
         ]);
@@ -881,14 +885,14 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             "info" => [
-                'id' => $version->id,
-                'info' => $version->info,
-                'iosLink' => $version->ios_link ?? $version->android_link,
+                'id'          => $version->id,
+                'info'        => $version->info,
+                'iosLink'     => $version->ios_link ?? $version->android_link,
                 'androidLink' => $version->android_link,
-                'name' => $version->name,
-                'number' => $version->number,
-                'packgeSize' => $version->packge_size * 1048576,
-                'type' => $version->type,
+                'name'        => $version->name,
+                'number'      => $version->number,
+                'packgeSize'  => $version->packge_size * 1048576,
+                'type'        => $version->type,
             ]
         ]);
     }
