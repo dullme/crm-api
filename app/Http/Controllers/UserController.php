@@ -226,13 +226,13 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('有待审核的保证金');
         }
 
-//        $images = collect($data['images'])->map(function ($item) {
-//            return preg_replace('/(http.*?storage\/)/i', '', $item);
-//        });
-//
-//        if($images->count() <= 0){
-//            return $this->setStatusCode(422)->responseError('图片上传失败');
-//        }
+        $images = collect($data['images'])->map(function ($item) {
+            return preg_replace('/(http.*?storage\/)/i', '', $item);
+        });
+
+        if($images->count() <= 0){
+            return $this->setStatusCode(422)->responseError('图片上传失败');
+        }
 
         Deposit::create([
             'user_id'  => Auth()->user()->id,
@@ -241,7 +241,7 @@ class UserController extends ResponseController
             'name'     => config('name'),
             'bankname' => config('bankname'),
             'bankcard' => config('bankcard'),
-            'images'   => $data['images'],
+            'images'   => $images->toJson(),
         ]);
 
         return $this->responseSuccess($data, config('deposit_submit_message'));
