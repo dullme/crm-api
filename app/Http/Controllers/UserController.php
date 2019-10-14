@@ -9,6 +9,7 @@ use App\DepositWithdraw;
 use App\Help;
 use App\Message;
 use App\User;
+use App\Version;
 use App\Withdraw;
 use Log;
 use DB;
@@ -20,7 +21,6 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use phpDocumentor\Reflection\DocBlock\Tags\Version;
 use Webpatser\Uuid\Uuid;
 
 class UserController extends ResponseController
