@@ -70,6 +70,7 @@ class VersionController extends AdminController
     {
         $form = new Form(new Version);
 
+        $form->number('id', __('版本ID'))->required('required');
         $form->text('name', __('项目名称'))->required('required');
         $form->text('number', __('版本号'))->required('required');
         $form->text('android_link', __('更新地址'))->required('required');
