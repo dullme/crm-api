@@ -29,6 +29,7 @@ class WithdrawController extends AdminController
         //筛选框
         $grid->expandFilter();
         $grid->filter(function ($filter){
+            $filter->disableIdFilter();
             $filter->equal('payer.name', '出款人');
             $filter->equal('name', '入款人');
             $filter->equal('order_no', '订单号');
@@ -39,6 +40,8 @@ class WithdrawController extends AdminController
                 '3' => '已完成',
                 '4' => '已取消',
             ]);
+
+            $filter->between('finished_at', '订单结束时间')->datetime();
         });
 
         $grid->disableActions();
@@ -50,26 +53,31 @@ class WithdrawController extends AdminController
             $actions->disableEdit();
         });
 
-        $grid->column('id', __('Id'));
+//        $grid->column('id', __('Id'));
         $grid->column('order_no', __('订单号'));
         $grid->column('withdraw_amount', __('订单金额'));
-        $grid->column('出款银行卡号')->display(function (){
-            return optional($this->payer)->bank_card;
-        });
-        $grid->column('出款归属')->display(function (){
-            return optional($this->payer)->bank_name;
-        });
+        $grid->column('brokerage_fee', __('佣金'));
+        $grid->column('parent_brokerage_fee', __('上级佣金'));
+        $grid->column('operation_fee', __('手续费'));
         $grid->column('出款人')->display(function (){
             return optional($this->payer)->name;
         });
         $grid->column('remitter', __('汇款人'));
-        $grid->column('bankcard', __('入款银行卡号'));
-        $grid->column('bankname', __('入款归属行'));
+        $grid->column('出款归属行')->display(function (){
+            return optional($this->payer)->bank_name;
+        });
+        $grid->column('出款银行卡号')->display(function (){
+            return optional($this->payer)->bank_card;
+        });
         $grid->column('name', __('入款人'));
+        $grid->column('bankname', __('入款归属行'));
+        $grid->column('bankcard', __('入款银行卡号'));
+        $grid->column('created_at', __('提款发起时间'));
+        $grid->column('grab_at', __('抢单时间'));
+        $grid->column('finished_at', __('订单结束时间'));
         $grid->column('images', __('凭证'))->display(function ($picture){
             return json_decode($picture);
         })->gallery(['width' => 100, 'height' => 100]);
-//        $grid->column('status', __('状态'))->editable('select',[0 => '待抢单',1 => '已接单', 2 => '已出款', 3 => '已完成']);
         $grid->column('status', __('状态'))->display(function ($status){
             if ($status == 0){
                 $label = "<a class='label label-danger'>待抢单</a>";
@@ -87,12 +95,19 @@ class WithdrawController extends AdminController
 
             return $label;
         });
-
-        $grid->column('created_at', __('提款发起时间'));
-        $grid->column('grab_at', __('抢单时间'));
-        $grid->column('payment_at', __('确认转账时间'));
         $grid->disableExport();
         $grid->disableCreateButton();
+
+        $grid->footer(function ($query) {
+
+            // 查询出已支付状态的订单总金额
+            $withdraw_amount = $query->sum('withdraw_amount');
+            $brokerage_fee = $query->sum('brokerage_fee');
+            $parent_brokerage_fee = $query->sum('parent_brokerage_fee');
+            $operation_fee = $query->sum('operation_fee');
+
+            return "<div style='padding: 10px;'>订单总金额 ： $withdraw_amount</div><div style='padding: 10px;'>佣金总金额 ： $brokerage_fee</div><div style='padding: 10px;'>上级佣金总金额 ： $parent_brokerage_fee</div><div style='padding: 10px;'>手续费总金额 ： $operation_fee</div>";
+        });
         return $grid;
     }
 

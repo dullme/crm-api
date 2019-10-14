@@ -34,6 +34,7 @@ class CreateWithdrawsTable extends Migration
             $table->timestamp('grab_at')->nullable()->comment('抢单时间');
             $table->timestamp('payment_at')->nullable()->comment('确认付款时间');
             $table->timestamp('time_out_at')->nullable()->comment('订单超时时间');
+            $table->timestamp('finished_at')->nullable()->comment('订单结束时间');
             $table->timestamps();
         });
     }

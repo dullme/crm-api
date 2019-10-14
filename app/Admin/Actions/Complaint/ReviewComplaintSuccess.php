@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Complaint;
 
+use Carbon\Carbon;
 use DB;
 use App\Message;
 use App\User;
@@ -45,6 +46,7 @@ class ReviewComplaintSuccess extends RowAction
                 }
 
                 $withdraw->status = 3;
+                $withdraw->finished_at = Carbon::now();
                 $withdraw_saved = $withdraw->save();
 
                 $message_saved = Message::create([

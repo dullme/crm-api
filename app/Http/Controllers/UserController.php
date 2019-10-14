@@ -74,7 +74,7 @@ class UserController extends ResponseController
     public function myTeam()
     {
         $mine = User::with(['withdraw' => function ($query) {
-            $query->where('status', 3)->whereDate('created_at', Carbon::today());
+            $query->where('status', 3)->whereDate('payment_at', Carbon::today());
         }])->find(Auth()->user()->id);
 
         $mine = [
@@ -86,7 +86,7 @@ class UserController extends ResponseController
 
 
         $user = User::with(['withdraw' => function ($query) {
-            $query->where('status', 3)->whereDate('created_at', Carbon::today());
+            $query->where('status', 3)->whereDate('payment_at', Carbon::today());
         }])->where([
             'pid' => Auth()->user()->id,
         ])->get();
@@ -370,6 +370,7 @@ class UserController extends ResponseController
         }
 
         $withdraw->status = 3;
+        $withdraw->finished_at = Carbon::now();
         $withdraw_saved = $withdraw->save();
 
 

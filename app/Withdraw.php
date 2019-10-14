@@ -25,6 +25,7 @@ class Withdraw extends Model
         'payment_at',
         'grab_at',
         'time_out_at',
+        'finished_at',
         'remitter',
     ];
 

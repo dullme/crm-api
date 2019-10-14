@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Complaint;
 
+use Carbon\Carbon;
 use DB;
 use App\User;
 use App\Withdraw;
@@ -31,6 +32,7 @@ class ReviewComplaintFail extends RowAction
                     $amount = $withdraw_amount->add($withdraw->operation_fee)->getValue();
                     User::where('id', $withdraw->user_id)->increment('amount', $amount);//取消订单反钱给提现方
                     $withdraw->status = 4;
+                    $withdraw->finished_at = Carbon::now();
                     $withdraw->save();
                 });
                 return $this->response()->success('交易已取消，资金已退回')->refresh();
