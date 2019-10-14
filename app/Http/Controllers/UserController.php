@@ -260,7 +260,7 @@ class UserController extends ResponseController
             $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
         }])->where('user_id', Auth()->user()->id)
             ->whereBetween('created_at', [$start_at, $end_at])
-            ->orderBy('payment_at', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $withdraw_list = $withdraw_list->map(function ($item) {
@@ -271,8 +271,13 @@ class UserController extends ResponseController
             return $item;
         });
 
+        $status2 = $withdraw_list->where('status', 2)->toArray();//等待确认
+        $status1 = $withdraw_list->where('status', 1)->toArray();//等待出款
+        $status0 = $withdraw_list->where('status', 0)->toArray();//等待接单
+        $others = $withdraw_list->whereIn('status', [3,4])->toArray();//剩下的
+
         return $this->responseSuccess([
-            'withdraw_list' => $withdraw_list,
+            'withdraw_list' => array_merge($status2, $status1, $status0, $others),
             'display_days'  => config('display_days')
         ]);
     }
@@ -394,6 +399,9 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('确认失败');
         }
         DB::commit();   //保存
+
+        $withdraw = $withdraw->toArray();
+        $withdraw['remitter'] = is_null($withdraw['remitter']) ? null : '*' . mb_substr($withdraw['remitter'], 1, 3);
 
         return $this->responseSuccess($withdraw, '操作成功');
     }
@@ -694,7 +702,7 @@ class UserController extends ResponseController
         }])->where('payer_user_id', Auth()->user()->id)
             ->whereIn('status', [2, 3, 4])
             ->whereBetween('created_at', [$start_at, $end_at])
-            ->orderBy('payment_at', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $withdraw_list = $withdraw_list->map(function ($item) {
@@ -704,8 +712,11 @@ class UserController extends ResponseController
             return $item;
         });
 
+        $status2 = $withdraw_list->where('status', 2)->toArray();//等待确认
+        $others = $withdraw_list->whereIn('status', [3,4])->toArray();//剩下的
+
         return $this->responseSuccess([
-            'transaction_list' => $withdraw_list,
+            'transaction_list' => array_merge($status2, $others),
             'display_days'     => config('display_days')
         ]);
     }
