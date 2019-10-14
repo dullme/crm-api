@@ -707,6 +707,12 @@ class UserController extends ResponseController
 
         $withdraw_list = $withdraw_list->map(function ($item) {
             $item['complaint'] = $item->complaints->count();
+            if($item->status == 4){
+                $item['brokerage_fee'] = 0;
+                $item['parent_brokerage_fee'] = 0;
+                $item['operation_fee'] = 0;
+            }
+
             unset($item['complaints']);
 
             return $item;
