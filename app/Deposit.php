@@ -14,6 +14,7 @@ class Deposit extends Model
         'bankcard',
         'images',
         'status',
+        'remitter',
     ];
 
 
