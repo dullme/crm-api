@@ -33,6 +33,10 @@ class UserController extends AdminController
             $filter->like('username', '会员账号');
             $filter->like('name', '会员姓名');
             $filter->equal('upLevel.invitation_code', '推广码');
+            $filter->equal('vip', '是否为VIP')->select([
+                '0' => '否',
+                '1' => '是',
+            ]);
         });
 
         $grid->column('id', __('Id'));
