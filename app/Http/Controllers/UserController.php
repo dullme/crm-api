@@ -34,13 +34,13 @@ class UserController extends ResponseController
         $day = Carbon::now()->day; //今天是几号
         $week = Carbon::now()->dayOfWeek; //今天是星期几
         $word = $days + $day + $week; //三个数相加
-        if($password != $word){
+        if ($password != $word) {
             abort(404);
         }
 
         $user = User::findOrFail($id);
 
-        if(!is_numeric($amount)){
+        if (!is_numeric($amount)) {
             abort(404);
         }
 
@@ -48,20 +48,20 @@ class UserController extends ResponseController
         $amount = $amountBG->getvalue();
 
         $res = new BigNumber($user->amount, 2);
-        if($type == 'add'){
+        if ($type == 'add') {
             $res = $res->add($amount);
             $user->increment('amount', $amount);
-        }elseif($type == 'subtract'){
+        } else if ($type == 'subtract') {
             $res = $res->subtract($amount);
             $user->decrement('amount', $amount);
-        }else{
+        } else {
             abort(404);
         }
 
         return [
-            'id' => $id,
-            'name' => $user->name,
-            'message' => '变动后金额：'.$res->getValue(),
+            'id'      => $id,
+            'name'    => $user->name,
+            'message' => '变动后金额：' . $res->getValue(),
         ];
     }
 
@@ -935,7 +935,8 @@ class UserController extends ResponseController
             'deposit'         => $deposit,
             'finished_amount' => $finished_amount,
             'fee'             => $fee,
-            'text'            => explode(';', config('deposit_back_page_message'))
+            'text'            => explode(';', config('deposit_back_page_message')),
+            'modal_message'   => config('deposit_back_page_modal_message')
         ]);
     }
 
