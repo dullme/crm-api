@@ -804,7 +804,7 @@ class UserController extends ResponseController
         if ($finished_amount >= config('deposit_free_amount')) {
             $fee = 0;
         } else {
-            $fee = round(config('deposit_fee') / 100 * $finished_amount, 2);
+            $fee = round(config('deposit_fee') / 100 * $deposit, 2);
             $deposit = bigNumber($deposit)->subtract($fee)->getValue();
         }
 
