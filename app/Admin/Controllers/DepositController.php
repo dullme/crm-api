@@ -39,6 +39,15 @@ class DepositController extends AdminController
             }
         });
 
+        $grid->filter(function ($filter){
+            $filter->equal('user.username', '会员账号');
+            $filter->equal('status', '状态')->select([
+                '0' => '待审核',
+                '1' => '已审核',
+                '2' => '已注销'
+            ]);
+        });
+
         $grid->column('id', __('Id'));
         $grid->column('会员账号')->display(function (){
             return optional($this->user)->username;
