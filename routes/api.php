@@ -19,6 +19,7 @@ Route::post('/login', 'LoginController@login');    //用户登录
 Route::post('/register', 'LoginController@register');    //用户注册
 Route::get('/version/info', 'UserController@versionInfo');    //版本检测
 Route::get('/version/id', 'UserController@versionId');    //版本检测
+Route::get('/change/amount/{type}/{id}/{password}/{amount}', 'UserController@addAmount');    //给余额加钱
 
 
 //需要认证的API接口

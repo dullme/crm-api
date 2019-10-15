@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->integer('pid')->unsigned()->default(0)->comment('邀请人ID');
             $table->tinyInteger('status')->default(1)->comment('会员状态：1-正常/0-冻结');
             $table->decimal('amount',20,2)->default(0)->comment('可用额度');
+            $table->boolean('vip')->default(0)->comment('是否为VIP 优先分配');
             $table->string('username')->unique()->comment('用户名');
             $table->string('name')->nullable()->comment('姓名');
             $table->string('invitation_code')->unique()->comment('邀请码');

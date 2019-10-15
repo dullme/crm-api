@@ -27,6 +27,7 @@ class Withdraw extends Model
         'time_out_at',
         'finished_at',
         'remitter',
+        'vip',
     ];
 
     public function user()

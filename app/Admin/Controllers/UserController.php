@@ -71,6 +71,11 @@ class UserController extends AdminController
             return new Table(['ID','会员账号','会员姓名'],$contact->toArray());
         });
 
+        $grid->column('vip', '是否为vip')->switch([
+            'off' => ['value'=> 0, 'text' => '否', 'color' => 'danger'],
+            'on' => ['value'=> 1, 'text' => '是', 'color' => 'success'],
+        ]);
+
         $grid->column('status', __('状态'))->display(function ($status){
             if ($status == 0){
                 $label = "<a class='label label-danger'>冻结</a>";
@@ -143,6 +148,10 @@ class UserController extends AdminController
             'on'  => ['value' => 1, 'text' => '正常', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '冻结', 'color' => 'danger'],
         ])->default(1);
+        $form->switch('vip', __('是否为vip'))->states([
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+        ])->default(0);
         $form->text('username', __('用户名'));
         $form->text('name', __('实名'));
         $form->text('invitation_code', __('邀请码'));
