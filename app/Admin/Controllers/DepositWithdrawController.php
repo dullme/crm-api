@@ -25,6 +25,7 @@ class DepositWithdrawController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new DepositWithdraw);
+        $grid->model()->orderBy('created_at', 'DESC');
 
         $grid->column('id', __('Id'));
         $grid->column('会员账号')->display(function (){
