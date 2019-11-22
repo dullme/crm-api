@@ -41,6 +41,9 @@ class UserController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('username', __('会员账号'));
+        $grid->column('pid','上级账号')->display(function (){
+            return optional($this->upLevel)->username;
+        });
         $grid->column('bank_card', __('银行卡号'));
         $grid->column('bank_name', __('发卡行'));
         $grid->column('name', __('会员姓名'));
@@ -103,6 +106,7 @@ class UserController extends AdminController
             }
         });
         $grid->disableExport();
+        $grid->disableRowSelector();
         return $grid;
     }
 
