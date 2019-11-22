@@ -1,5 +1,17 @@
 <?php
 
+use App\User;
+
+function getUserId($id, $pid){
+    $u = User::where('pid', $id)->pluck('id')->toArray();
+    if($pid == 0){
+
+        return array_merge($u, [$id]);
+    }else{
+        return array_merge($u, [$id, $pid]);
+    }
+}
+
 /**
  * 生成纯数字的随机数
  * @param $len

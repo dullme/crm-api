@@ -602,8 +602,10 @@ class UserController extends ResponseController
                 ];
             }
 
+            $user_ids = getUserId(Auth()->user()->id, Auth()->user()->pid);
+
             $Withdraw = Withdraw::inRandomOrder()
-                ->where('user_id', '!=', Auth()->user()->id)
+                ->whereNotIn('user_id', $user_ids)
                 ->where('withdraw_amount', '<=', $grabAmount)
                 ->where('status', 0)
                 ->where('vip', true)
@@ -611,7 +613,7 @@ class UserController extends ResponseController
 
             if (!$Withdraw) {
                 $Withdraw = Withdraw::inRandomOrder()
-                    ->where('user_id', '!=', Auth()->user()->id)
+                    ->whereNotIn('user_id', $user_ids)
                     ->where('withdraw_amount', '<=', $grabAmount)
                     ->where('status', 0)
                     ->first();
