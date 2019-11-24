@@ -3,7 +3,9 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Deposit\ReviewDeposit;
+use App\Complaint;
 use App\Deposit;
+use App\DepositWithdraw;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -121,5 +123,18 @@ class DepositController extends AdminController
         $form->number('status', __('Status'));
 
         return $form;
+    }
+
+    public function asd()
+    {
+        $withdraw = DepositWithdraw::where('status', 0)->count();
+        $deposit = Deposit::where('status', 0)->count();
+        $complaint = Complaint::where('status', 0)->count();
+
+        return response()->json([
+            'deposit' => $deposit,
+            'complaint' => $complaint,
+            'withdraw' => $withdraw
+        ]);
     }
 }

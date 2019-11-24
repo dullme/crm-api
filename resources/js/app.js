@@ -30,3 +30,33 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+setTimer ()
+
+function setTimer () {
+    let timer
+    axios.get('/admin/asd')
+        .then((res) => {
+            if(res.data.complaint >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.data.complaint + '条投诉待处理');
+            }
+            if(res.data.deposit >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.data.deposit + '条保证金充值待处理');
+            }
+            if(res.data.withdraw >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.data.withdraw + '条保证金提现待处理');
+            }
+            setTimeout(function () {
+                setTimer();
+            }, 60000)
+        })
+        .catch((error) => {
+            setTimeout(function () {
+                setTimer();
+            }, 1000)
+        });
+}
+
