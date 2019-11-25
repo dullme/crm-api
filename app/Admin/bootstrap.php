@@ -37,7 +37,7 @@ Encore\Admin\Form::init(function (\Encore\Admin\Form $form) {
     });
 });
 
-Admin::js('/js/app.js');
+Admin::js('/js/appp.js');
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     $url = asset('tishiyin.mp3');
