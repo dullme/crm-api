@@ -44,7 +44,7 @@ function upload($file, $disk='public') {
     }
 
     // 2.是否符合文件类型 getClientOriginalExtension 获得文件后缀名
-    $fileExtension = $file->getClientOriginalExtension();
+    $fileExtension = strtolower($file->getClientOriginalExtension());
     if(! in_array($fileExtension, ['png', 'jpg', 'gif', 'jpeg'])) {
         return [
             'status' => false,
