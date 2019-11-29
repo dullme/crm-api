@@ -18,6 +18,8 @@
  *
  */
 
+use Encore\Admin\Admin;
+
 Encore\Admin\Form::forget(['map', 'editor']);
 
 Encore\Admin\Form::init(function (\Encore\Admin\Form $form) {
@@ -33,4 +35,11 @@ Encore\Admin\Form::init(function (\Encore\Admin\Form $form) {
         $tools->disableView();
 //        $tools->disableList();
     });
+});
+
+Admin::js('/js/appp.js');
+
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+    $url = asset('tishiyin.mp3');
+    $navbar->right("<div style='float: left;margin-top: 11px'><audio src='{$url}' style='width: 250px;height: 30px' controls id='audio'></audio></div>");
 });

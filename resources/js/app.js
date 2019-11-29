@@ -1,32 +1,60 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+// window.axios = require('axios');
+//
+// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+//
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+//
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+// }
 
-require('./bootstrap');
+setTimer ()
 
-window.Vue = require('vue');
+function setTimer () {
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+    $.ajax({url:"/admin/asd",success:function(res){
+        console.log(res)
+            if(res.complaint >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.complaint + '条投诉待处理');
+            }
+            if(res.deposit >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.deposit + '条保证金充值待处理');
+            }
+            if(res.withdraw >0){
+                document.getElementById('audio').play();
+                toastr.success('有'+res.withdraw + '条保证金提现待处理');
+            }
+            setTimeout(function () {
+                setTimer();
+            }, 60000)
+        }});
 
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+    // axios.get('/admin/asd')
+    //     .then((res) => {
+    //         if(res.data.complaint >0){
+    //             document.getElementById('audio').play();
+    //             toastr.success('有'+res.data.complaint + '条投诉待处理');
+    //         }
+    //         if(res.data.deposit >0){
+    //             document.getElementById('audio').play();
+    //             toastr.success('有'+res.data.deposit + '条保证金充值待处理');
+    //         }
+    //         if(res.data.withdraw >0){
+    //             document.getElementById('audio').play();
+    //             toastr.success('有'+res.data.withdraw + '条保证金提现待处理');
+    //         }
+    //         setTimeout(function () {
+    //             setTimer();
+    //         }, 60000)
+    //     })
+    //     .catch((error) => {
+    //         setTimeout(function () {
+    //             setTimer();
+    //         }, 1000)
+    //     });
+}
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-const app = new Vue({
-    el: '#app',
-});
