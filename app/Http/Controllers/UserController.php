@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Moontoast\Math\BigNumber;
+use mysql_xdevapi\Exception;
 use Webpatser\Uuid\Uuid;
 use function Sodium\add;
 
@@ -350,46 +351,44 @@ class UserController extends ResponseController
         );
 
         DB::beginTransaction(); //开启事务
+        try {
+            $user = User::where('id', Auth()->user()->id)->sharedLock()->first();
 
-        $user = User::find(Auth()->user()->id);
-        $user_amount = $user->amount;
+            $operation_fee = round(config('operation_fee') / 100 * $data['withdraw_amount'], 2);
+            $brokerage_fee = round(config('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
 
-        $operation_fee = round(config('operation_fee') / 100 * $data['withdraw_amount'], 2);
-        $brokerage_fee = round(config('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
+            $withdraw_big_number = bigNumber($data['withdraw_amount']);
+            $withdraw_amount = $withdraw_big_number->add($operation_fee);
 
-        $withdraw_big_number = bigNumber($data['withdraw_amount']);
-        $withdraw_amount = $withdraw_big_number->add($operation_fee);
+            if ($withdraw_amount > $user->amount) {
+                return $this->setStatusCode(422)->responseError('金额不足');
+            }
 
-        if ($withdraw_amount > $user_amount) {
-            return $this->setStatusCode(422)->responseError('金额不足');
-        }
+            $user_big_number = bigNumber($user->amount);
+            $amount = $user_big_number->subtract($withdraw_amount)->getValue();
+            $user->amount = $amount;
+            $user->save();
 
-        $user_big_number = bigNumber($user_amount);
-        $amount = $user_big_number->subtract($withdraw_amount)->getValue();
-        $user->amount = $amount;
-        $user_saved = $user->save();
+            Withdraw::create([
+                'user_id'         => $user->id,
+                'order_no'        => time() . randStr(6),
+                'amount'          => $user->amount, //未扣除前余额
+                'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
+                'operation_fee'   => $operation_fee, //平台运营手续费
+                'brokerage_fee'   => $brokerage_fee, //佣金
+                'name'            => Auth()->user()->name,
+                'bankname'        => Auth()->user()->bank_name,
+                'bankcard'        => Auth()->user()->bank_card,
+                'vip'             => Auth()->user()->vip,
+            ]);
 
-        $withdraw_saved = Withdraw::create([
-            'user_id'         => $user->id,
-            'order_no'        => time() . randStr(6),
-            'amount'          => $user_amount, //未扣除前余额
-            'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
-            'operation_fee'   => $operation_fee, //平台运营手续费
-            'brokerage_fee'   => $brokerage_fee, //佣金
-            'name'            => Auth()->user()->name,
-            'bankname'        => Auth()->user()->bank_name,
-            'bankcard'        => Auth()->user()->bank_card,
-            'vip'             => Auth()->user()->vip,
-        ]);
-
-        if (!$user_saved || !$withdraw_saved) {
+            DB::commit();   //保存
+            return $this->responseSuccess($amount, '提现成功');
+        }catch (Exception $exception){
             DB::rollBack(); //回滚
 
             return $this->setStatusCode(422)->responseError('提现失败');
         }
-        DB::commit();   //保存
-
-        return $this->responseSuccess($amount, '提现成功');
     }
 
     /**
