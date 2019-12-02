@@ -87,7 +87,7 @@ class User extends Authenticatable
 
     public function totalAmount()
     {
-        return $this->hasMany(Withdraw::class, 'user_id', 'id');
+        return $this->hasMany(Withdraw::class, 'user_id', 'id')->where('status', 3);
     }
 
     public function withdraw()
