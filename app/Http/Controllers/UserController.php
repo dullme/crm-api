@@ -350,6 +350,11 @@ class UserController extends ResponseController
             ]
         );
 
+        $ccc = Withdraw::where('user_id', Auth()->user()->id)->whereIn('status', [0,1,2])->count();
+        if($ccc){
+            return $this->setStatusCode(422)->responseError('有提现订单未完成，请完成后再试');
+        }
+
         DB::beginTransaction(); //开启事务
         try {
             $user = User::where('id', Auth()->user()->id)->sharedLock()->first();
@@ -402,6 +407,10 @@ class UserController extends ResponseController
 
         if (!$withdraw || $withdraw->user_id != Auth()->user()->id || $withdraw->status != 2) {
             return $this->setStatusCode(422)->responseError('确认失败');
+        }
+
+        if(Carbon::now()->lt(Carbon::parse($withdraw->payment_at)->addMinutes(10))){
+            return $this->setStatusCode(422)->responseError('打款和确认收款时间不能小于10分钟，请稍等后再试');
         }
 
         DB::beginTransaction(); //开启事务
