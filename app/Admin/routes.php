@@ -21,5 +21,6 @@ Route::group([
     $router->resource('deposit-withdraws', DepositWithdrawController::class);
     $router->resource('user-amounts', UserAmountController::class);
     $router->resource('versions', VersionController::class);
+    $router->resource('grab-logs', GrabLogController::class);
     $router->get('asd', 'DepositController@asd');
 });

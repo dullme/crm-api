@@ -6,6 +6,7 @@ use App\Bank;
 use App\Complaint;
 use App\Deposit;
 use App\DepositWithdraw;
+use App\GrabLog;
 use App\Help;
 use App\Message;
 use App\User;
@@ -640,6 +641,12 @@ class UserController extends ResponseController
                 $Withdraw->grab_at = Carbon::now();//抢单时间
                 $Withdraw->time_out_at = Carbon::now()->addMinutes(config('auto_cancel'));//订单打款超时时间
 
+                GrabLog::create([
+                    'user_id' => Auth()->user()->id,
+                    'order_no' => $Withdraw->order_no,
+                    'withdraw_amount' => $Withdraw->withdraw_amount,
+                ]);
+
                 return [
                     'status'  => $Withdraw->save(),
                     'message' => config('grabbed_message'),//抢单成功
@@ -761,7 +768,6 @@ class UserController extends ResponseController
             $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
         }])->where('payer_user_id', Auth()->user()->id)
             ->whereIn('status', [2, 3, 4])
-            ->whereBetween('created_at', [$start_at, $end_at])
             ->orderBy('created_at', 'DESC')
             ->get();
 
@@ -779,7 +785,7 @@ class UserController extends ResponseController
         });
 
         $status2 = $withdraw_list->where('status', 2)->toArray();//等待确认
-        $others = $withdraw_list->whereIn('status', [3, 4])->toArray();//剩下的
+        $others = $withdraw_list->whereIn('status', [3, 4])->whereBetween('created_at', [$start_at, $end_at])->toArray();//剩下的
 
         return $this->responseSuccess([
             'transaction_list' => array_merge($status2, $others),
