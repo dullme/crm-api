@@ -727,13 +727,22 @@ class UserController extends ResponseController
 
         $grab = Withdraw::find($data['id']);
 
-        if (!$grab || $grab->payer_user_id != Auth()->user()->id || $grab->status != 1) {
-            return $this->setStatusCode(422)->responseError('订单超时或已被取消');
+        if (!$grab) {
+            return $this->setStatusCode(422)->responseError('订单不存在');
+        }
+
+        if ($grab->payer_user_id != Auth()->user()->id) {
+            return $this->setStatusCode(422)->responseError('无效的订单'.$grab->payer_user_id);
+        }
+
+        if ($grab->status != 1) {
+            return $this->setStatusCode(422)->responseError('当前订单状态错误'.$grab->status);
         }
 
         $time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $grab->time_out_at);
-        if (Carbon::now()->gte($time_out_at)) {
-            return $this->setStatusCode(422)->responseError('订单已超时');
+        $now = Carbon::now();
+        if ($now->gte($time_out_at)) {
+            return $this->setStatusCode(422)->responseError('订单已超时'.$time_out_at.'|'.$now);
         }
 
         $images = collect($data['images'])->map(function ($item) {
