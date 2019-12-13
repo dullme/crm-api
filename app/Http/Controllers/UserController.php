@@ -331,6 +331,8 @@ class UserController extends ResponseController
      */
     public function withdraw(Request $request)
     {
+        $user_id = Auth()->user()->id;
+
         if (config('stop') == 'true') {
             return $this->setStatusCode(422)->responseError(config('stop_message'));
         }
@@ -351,14 +353,14 @@ class UserController extends ResponseController
             ]
         );
 
-        $ccc = Withdraw::where('user_id', Auth()->user()->id)->whereIn('status', [0,1,2])->count();
+        $ccc = Withdraw::where('user_id', $user_id)->whereIn('status', [0,1,2])->count();
         if($ccc){
             return $this->setStatusCode(422)->responseError('有提现订单未完成，请完成后再试');
         }
 
         DB::beginTransaction(); //开启事务
         try {
-            $user = User::where('id', Auth()->user()->id)->sharedLock()->first();
+            $user = User::where('id', $user_id)->sharedLock()->first();
 
             $operation_fee = round(config('operation_fee') / 100 * $data['withdraw_amount'], 2);
             $brokerage_fee = round(config('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
@@ -369,16 +371,16 @@ class UserController extends ResponseController
             if ($withdraw_amount > $user->amount) {
                 return $this->setStatusCode(422)->responseError('金额不足');
             }
-
+            $amountBefore = $user->amount;
             $user_big_number = bigNumber($user->amount);
             $amount = $user_big_number->subtract($withdraw_amount)->getValue();
             $user->amount = $amount;
             $user->save();
 
             Withdraw::create([
-                'user_id'         => $user->id,
+                'user_id'         => $user_id,
                 'order_no'        => time() . randStr(6),
-                'amount'          => $user->amount, //未扣除前余额
+                'amount'          => $amountBefore, //未扣除前余额
                 'withdraw_amount' => $data['withdraw_amount'],//提现金额（不包括手续费）
                 'operation_fee'   => $operation_fee, //平台运营手续费
                 'brokerage_fee'   => $brokerage_fee, //佣金
