@@ -56,7 +56,7 @@ class ResetWithdraw extends Command
                 'status'          => 3,
                 'name'            => '系统扣款',
                 'bankname'        => '000000000000000000',
-                'bankcard'        => '中国银行',
+                'bankcard'        => '付款超时，系统扣款',
                 'vip'             => 0,
             ]);
 
