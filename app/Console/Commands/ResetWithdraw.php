@@ -42,7 +42,7 @@ class ResetWithdraw extends Command
     public function handle()
     {
         $amount = configs('deduction');
-        $withdraw = Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now())->pluck('payer_user_id', 'id');
+        $withdraw = Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now())->get();
 
         $withdraw->map(function ($item) use($amount){
             User::where('id', $item->payer_user_id)->decrement('amount', $amount);
