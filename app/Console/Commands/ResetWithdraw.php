@@ -42,33 +42,33 @@ class ResetWithdraw extends Command
     public function handle()
     {
         $amount = configs('deduction');
-        $ids = Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now())->pluck('payer_user_id', 'id');
-        if ($ids) {
-            foreach ($ids as $key=>$id) {
-                User::where('id', $id)->decrement('amount', $amount);
-                Withdraw::create([
-                    'user_id'         => $id,
-                    'order_no'        => time() . randStr(6),
-                    'amount'          => 0, //未扣除前余额
-                    'withdraw_amount' => $amount,//提现金额（不包括手续费）
-                    'operation_fee'   => 0, //平台运营手续费
-                    'brokerage_fee'   => 0, //佣金
-                    'status'          => 3,
-                    'name'            => '系统扣款',
-                    'bankname'        => '000000000000000000',
-                    'bankcard'        => '中国银行',
-                    'vip'             => 0,
-                ]);
+        $withdraw = Withdraw::where('status', 1)->where('time_out_at', '<', Carbon::now())->pluck('payer_user_id', 'id');
 
-                Withdraw::where('id', $key)->update([
-                    'payer_user_id'        => null,
-                    'payer_parent_user_id' => null,
-                    'parent_brokerage_fee' => 0,
-                    'status'               => 0,
-                    'grab_at'              => null,
-                    'time_out_at'          => null,
-                ]);
-            }
-        }
+        $withdraw->map(function ($item) use($amount){
+            User::where('id', $item->payer_user_id)->decrement('amount', $amount);
+            Withdraw::create([
+                'user_id'         => $item->payer_user_id,
+                'order_no'        => $item->order_no.'-'.time(),
+                'amount'          => 0, //未扣除前余额
+                'withdraw_amount' => $amount,//提现金额（不包括手续费）
+                'operation_fee'   => 0, //平台运营手续费
+                'brokerage_fee'   => 0, //佣金
+                'status'          => 3,
+                'name'            => '系统扣款',
+                'bankname'        => '000000000000000000',
+                'bankcard'        => '中国银行',
+                'vip'             => 0,
+            ]);
+
+            Withdraw::where('id', $item->id)->update([
+                'payer_user_id'        => null,
+                'payer_parent_user_id' => null,
+                'parent_brokerage_fee' => 0,
+                'status'               => 0,
+                'grab_at'              => null,
+                'time_out_at'          => null,
+            ]);
+        });
+
     }
 }
