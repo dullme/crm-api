@@ -100,11 +100,11 @@ class UserController extends ResponseController
         return $this->responseSuccess(array_merge([
             'user_bank_image'     => optional($bankname_list->where('bank_name', $request->user()->bank_name)->first())->icon,
             'bankname_list'       => $bankname_list->pluck('bank_name'),
-            'admin_name'          => config('name'),
-            'admin_bankname'      => config('bankname'),
-            'admin_bankcard'      => config('bankcard'),
-            'admin_operation_fee' => config('operation_fee'),
-            'message'             => config('announcement') == 'false' ? '' : config('announcement'),
+            'admin_name'          => configs('name'),
+            'admin_bankname'      => configs('bankname'),
+            'admin_bankcard'      => configs('bankcard'),
+            'admin_operation_fee' => configs('operation_fee'),
+            'message'             => configs('announcement') == 'false' ? '' : configs('announcement'),
         ], $request->user()->toArray()));
     }
 
@@ -259,8 +259,8 @@ class UserController extends ResponseController
             'user_id' => Auth()->user()->id
         ])->get();
 
-        if ($deposit->where('status', 1)->sum('amount') > config('deposit')) {
-            return $this->setStatusCode(422)->responseError(config('deposit_enough_message'));
+        if ($deposit->where('status', 1)->sum('amount') > configs('deposit')) {
+            return $this->setStatusCode(422)->responseError(configs('deposit_enough_message'));
         }//保证金足够
 
         if ($deposit->where('status', 0)->count()) {
@@ -279,13 +279,13 @@ class UserController extends ResponseController
             'user_id'  => Auth()->user()->id,
             'amount'   => $data['amount'],
             'remitter' => $data['remitter'],
-            'name'     => config('name'),
-            'bankname' => config('bankname'),
-            'bankcard' => config('bankcard'),
+            'name'     => configs('name'),
+            'bankname' => configs('bankname'),
+            'bankcard' => configs('bankcard'),
             'images'   => $images->toJson(),
         ]);
 
-        return $this->responseSuccess($data, config('deposit_submit_message'));
+        return $this->responseSuccess($data, configs('deposit_submit_message'));
     }
 
     /**
@@ -295,7 +295,7 @@ class UserController extends ResponseController
     public function withdrawList()
     {
         $end_at = Carbon::now();
-        $start_at = Carbon::now()->subDays(config('display_days'));
+        $start_at = Carbon::now()->subDays(configs('display_days'));
 
         $withdraw_list = Withdraw::with(['complaints' => function ($query) {
             $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
@@ -319,7 +319,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'withdraw_list' => array_merge($status2, $status1, $status0, $others),
-            'display_days'  => config('display_days')
+            'display_days'  => configs('display_days')
         ]);
     }
 
@@ -333,23 +333,23 @@ class UserController extends ResponseController
     {
         $user_id = Auth()->user()->id;
 
-        if (config('stop') == 'true') {
-            return $this->setStatusCode(422)->responseError(config('stop_message'));
+        if (configs('stop') == 'true') {
+            return $this->setStatusCode(422)->responseError(configs('stop_message'));
         }
 
         if (Auth()->user()->status == 0) {
-            return $this->setStatusCode(422)->responseError(config('account_freeze_message'));
+            return $this->setStatusCode(422)->responseError(configs('account_freeze_message'));
         }
 
         $data = $request->validate(
             [
-                'withdraw_amount' => 'required|integer|min:' . config('withdraw_min') . '|max:' . config('withdraw_max'),
+                'withdraw_amount' => 'required|integer|min:' . configs('withdraw_min') . '|max:' . configs('withdraw_max'),
             ],
             [
                 'withdraw_amount.required' => '金额不能为空',
                 'withdraw_amount.integer'  => '金额必须为整数',
-                'withdraw_amount.min'      => config('withdraw_min_message'),
-                'withdraw_amount.max'      => config('withdraw_max_message'),
+                'withdraw_amount.min'      => configs('withdraw_min_message'),
+                'withdraw_amount.max'      => configs('withdraw_max_message'),
             ]
         );
 
@@ -362,8 +362,8 @@ class UserController extends ResponseController
         try {
             $user = User::where('id', $user_id)->sharedLock()->first();
 
-            $operation_fee = round(config('operation_fee') / 100 * $data['withdraw_amount'], 2);
-            $brokerage_fee = round(config('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
+            $operation_fee = round(configs('operation_fee') / 100 * $data['withdraw_amount'], 2);
+            $brokerage_fee = round(configs('brokerage_fee') / 100 * $data['withdraw_amount'], 2);
 
             $withdraw_big_number = bigNumber($data['withdraw_amount']);
             $withdraw_amount = $withdraw_big_number->add($operation_fee);
@@ -412,8 +412,8 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('确认失败');
         }
 
-        if(Carbon::now()->lt(Carbon::parse($withdraw->payment_at)->addMinutes(10))){
-            return $this->setStatusCode(422)->responseError('打款和确认收款时间不能小于10分钟，请稍等后再试');
+        if(Carbon::now()->lt(Carbon::parse($withdraw->payment_at)->addMinutes(configs('interval')))){
+            return $this->setStatusCode(422)->responseError('打款和确认收款时间不能小于'.configs('interval').'分钟，请稍等后再试');
         }
 
         DB::beginTransaction(); //开启事务
@@ -441,7 +441,7 @@ class UserController extends ResponseController
         $message_saved = Message::create([
             'user_id' => $withdraw->payer_user_id,
             'title'   => '交易确认',
-            'content' => config('payment_confirmed_message'),
+            'content' => configs('payment_confirmed_message'),
         ]);
 
         if (!$user_saved || !$withdraw_saved || !$message_saved) {
@@ -493,9 +493,9 @@ class UserController extends ResponseController
             return $this->setStatusCode(422)->responseError('投诉失败');
         }
 
-        $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $withdraw->grab_at)->addMinutes(config('grabbed_complaints_minutes'));
+        $grab_time_out_at = Carbon::createFromFormat('Y-m-d H:i:s', $withdraw->grab_at)->addMinutes(configs('grabbed_complaints_minutes'));
         if (Carbon::now()->lte($grab_time_out_at)) {
-            return $this->setStatusCode(422)->responseError(config('grabbed_complaints_minutes_message'));
+            return $this->setStatusCode(422)->responseError(configs('grabbed_complaints_minutes_message'));
         }
 
 
@@ -564,8 +564,8 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'deposit_amount'         => $deposit_amount,
-            'deposit'                => config('deposit'),
-            'deposit_enough_message' => config('deposit_enough_message'),
+            'deposit'                => configs('deposit'),
+            'deposit_enough_message' => configs('deposit_enough_message'),
             'withdraw_amount'        => Auth()->user()->amount,
             'index_amount'           => $this->todayCanGrabAmount() //可抢金额
         ]);
@@ -580,16 +580,16 @@ class UserController extends ResponseController
     {
         $grabAmount = $this->todayCanGrabAmount();//可抢金额
 
-        if (config('stop') == 'true') {
-            return $this->setStatusCode(422)->responseError(config('stop_message'));
+        if (configs('stop') == 'true') {
+            return $this->setStatusCode(422)->responseError(configs('stop_message'));
         }
 
         if (Auth()->user()->status == 0) {
-            return $this->setStatusCode(422)->responseError(config('account_freeze_message'));
+            return $this->setStatusCode(422)->responseError(configs('account_freeze_message'));
         }
 
         if (10000 >= $grabAmount) {
-            return $this->setStatusCode(422)->responseError(config('total_amount_shortage_message'));
+            return $this->setStatusCode(422)->responseError(configs('total_amount_shortage_message'));
         }
 
         $deposit_amount = Deposit::where([
@@ -597,8 +597,8 @@ class UserController extends ResponseController
             'status'  => 1,
         ])->sum('amount');
 
-        if ($deposit_amount < config('deposit')) {
-            return $this->setStatusCode(422)->responseError(config('deposit_shortage_message'));
+        if ($deposit_amount < configs('deposit')) {
+            return $this->setStatusCode(422)->responseError(configs('deposit_shortage_message'));
         }
 
 
@@ -609,7 +609,7 @@ class UserController extends ResponseController
             if ($count) {
                 return [
                     'status'  => false,
-                    'message' => config('not_completed_message'),//有未完成的单子
+                    'message' => configs('not_completed_message'),//有未完成的单子
                 ];
             }
 
@@ -635,13 +635,13 @@ class UserController extends ResponseController
                 $Withdraw->payer_user_id = Auth()->user()->id;
                 if (Auth()->user()->pid) {
                     $Withdraw->payer_parent_user_id = Auth()->user()->pid;
-                    $parent_brokerage_fee = round(config('parent_brokerage_fee') / 100 * $Withdraw->withdraw_amount, 2);
+                    $parent_brokerage_fee = round(configs('parent_brokerage_fee') / 100 * $Withdraw->withdraw_amount, 2);
                     $Withdraw->parent_brokerage_fee = bigNumber($parent_brokerage_fee)->getValue();
                 }
 
                 $Withdraw->status = 1;
                 $Withdraw->grab_at = Carbon::now();//抢单时间
-                $Withdraw->time_out_at = Carbon::now()->addMinutes(config('auto_cancel'));//订单打款超时时间
+                $Withdraw->time_out_at = Carbon::now()->addMinutes(configs('auto_cancel'));//订单打款超时时间
 
                 GrabLog::create([
                     'user_id' => Auth()->user()->id,
@@ -651,13 +651,13 @@ class UserController extends ResponseController
 
                 return [
                     'status'  => $Withdraw->save(),
-                    'message' => config('grabbed_message'),//抢单成功
+                    'message' => configs('grabbed_message'),//抢单成功
                 ];
             }
 
             return [
                 'status'  => false,
-                'message' => config('no_list_message'),
+                'message' => configs('no_list_message'),
             ];
         });
 
@@ -681,7 +681,7 @@ class UserController extends ResponseController
         ])->first();
 
         if ($withdraw) {
-            return $this->setStatusCode(422)->responseError(config('not_completed_message'));
+            return $this->setStatusCode(422)->responseError(configs('not_completed_message'));
         }
 
         $withdraw = Withdraw::where([
@@ -760,7 +760,7 @@ class UserController extends ResponseController
         Message::create([
             'user_id' => $grab->user_id,
             'title'   => '提现待确认',
-            'content' => config('withdra_unconfirmed_message'),
+            'content' => configs('withdra_unconfirmed_message'),
         ]);
 
         return $this->responseSuccess($data, '提交成功');
@@ -773,7 +773,7 @@ class UserController extends ResponseController
     public function transactionList()
     {
         $end_at = Carbon::now();
-        $start_at = Carbon::now()->subDays(config('display_days'));
+        $start_at = Carbon::now()->subDays(configs('display_days'));
 
         $withdraw_list = Withdraw::with(['complaints' => function ($query) {
             $query->where('user_id', '!=', Auth()->user()->id)->whereIn('status', [0, 1]);
@@ -800,7 +800,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'transaction_list' => array_merge($status2, $others),
-            'display_days'     => config('display_days')
+            'display_days'     => configs('display_days')
         ]);
     }
 
@@ -810,7 +810,7 @@ class UserController extends ResponseController
      */
     public function getComplaintMessage()
     {
-        return $this->responseSuccess(config('complaint_message'));
+        return $this->responseSuccess(configs('complaint_message'));
     }
 
     /**
@@ -828,7 +828,7 @@ class UserController extends ResponseController
 
         return $this->responseSuccess([
             'helps'   => $helps,
-            'message' => config('announcement')
+            'message' => configs('announcement')
         ]);
     }
 

@@ -52,7 +52,7 @@ class ReviewComplaintSuccess extends RowAction
                 $message_saved = Message::create([
                     'user_id' => $withdraw->payer_user_id,
                     'title' => '投诉成功交易确认',
-                    'content' => config('payment_confirmed_message'),
+                    'content' => configs('payment_confirmed_message'),
                 ]);
 
                 if (!$complaint_saved || !$user_saved || !$withdraw_saved || !$message_saved) {

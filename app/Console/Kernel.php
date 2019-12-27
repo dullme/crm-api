@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('reset:withdraw')->everyMinute();
+         $schedule->command('clear:images')->daily();
     }
 
     /**

@@ -22,5 +22,8 @@ Route::group([
     $router->resource('user-amounts', UserAmountController::class);
     $router->resource('versions', VersionController::class);
     $router->resource('grab-logs', GrabLogController::class);
+    $router->resource('configs', ConfigController::class);
+
+
     $router->get('asd', 'DepositController@asd');
 });

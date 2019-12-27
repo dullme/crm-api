@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use Illuminate\Support\Facades\Redis;
 
 function getUserId($id, $pid){
     $u = User::where('pid', $id)->pluck('id')->toArray();
@@ -101,4 +102,17 @@ function upload($file, $disk='public') {
 function bigNumber($number, $scale = 2)
 {
     return new \Moontoast\Math\BigNumber($number, $scale);
+}
+
+function configs($key){
+    $res = Redis::get($key);
+    if($res){
+        return $res;
+    }else{
+        $res = config($key);
+        if($res){
+            Redis::set($key, $res);
+        }
+        return $res;
+    }
 }

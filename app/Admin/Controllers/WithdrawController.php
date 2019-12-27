@@ -31,26 +31,34 @@ class WithdrawController extends AdminController
         $grid->expandFilter();
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
-            $filter->equal('payer.name', '出款人');
-            $filter->equal('name', '入款人');
             $filter->equal('order_no', '订单号');
-            $filter->equal('status', '状态')->select([
-                '0' => '待抢单',
-                '1' => '已接单',
-                '2' => '已出款',
-                '3' => '已完成',
-                '4' => '已取消',
-            ]);
+            if(in_array(Auth('admin')->user()->username, ['admin', 'administrator'])){
+                $filter->equal('payer.name', '出款人');
+                $filter->equal('name', '入款人');
+                $filter->equal('status', '状态')->select([
+                    '0' => '待抢单',
+                    '1' => '已接单',
+                    '2' => '已出款',
+                    '3' => '已完成',
+                    '4' => '已取消',
+                ]);
 
-            $filter->between('finished_at', '订单结束时间')->datetime();
+                $filter->between('finished_at', '订单结束时间')->datetime();
+            }
+
         });
 
 //        $grid->disableActions();
 
+        $grid->disableRowSelector();
+
         //操作栏
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->disableDelete();
+            if (in_array($this->row->status, [0, 1, 2])) {
+                $actions->disableDelete();
+            }
+
             if (!in_array($this->row->status, [0, 1])) {
                 $actions->disableEdit();
             }
