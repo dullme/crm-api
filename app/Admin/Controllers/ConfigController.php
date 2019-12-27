@@ -120,7 +120,7 @@ class ConfigController
     {
         $config = DB::table('admin_config')->find($id);
         $redis = new Client(config('database.redis.default'));
-        $redis->del('laravel_database_'.$config->name);
+        $redis->del(strtolower(config('app.name')).'_database_'.$config->name);
         return $this->form()->update($id);
     }
 }
